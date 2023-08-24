@@ -38,9 +38,9 @@ class Tokenizer():
         self.next = None
 
     def selectNext(self):
-    '''
-        Atualiza a variável next com o próximo token passado
-    '''
+        '''
+            Atualiza a variável next com o próximo token passado
+        '''
         
         find_token = False
         
@@ -72,7 +72,7 @@ class Tokenizer():
                 find_token = True
 
             elif(self.source[self.position] == "\\n"):
-                self.next = Token(_type = "" , value = EOF)
+                self.next = Token(_type = "EOF" , value = EOF)
                 self.position +=1
 
                 find_token = True
@@ -80,24 +80,61 @@ class Tokenizer():
                 self.position +=1
 
 
-def main(string_input):
-    
-    tokenizer = Tokenizer(string_input)
-    
-    tokenizer.selectNext()
-    print(tokenizer.next)
+class Parser():
+    tokenizer : object
 
-    tokenizer.selectNext()
-    print(tokenizer.next)
+    def parseExpression(self):
+        '''
+            Analisa se a sintaxe está aderente a gramática
+        '''
 
-    tokenizer.selectNext()
-    print(tokenizer.next)
+        # Primeiro caracter deve ser número !
+        if(tokenizer.next.value.isdigit()):
+            result = tokenizer.next.value
+            tokenizer.selectNext()  # Atualiza ara próximo Token
 
-    tokenizer.selectNext()
-    print(tokenizer.next)
+            while(tokenizer.next._type in ['+','-']):
+
+                if(tokenizer.next._type == '+'):
+                    tokenizer.selectNext() 
+
+                    # O próximo deve ser um número:
+                    if(tokenizer.next.value.isdigit()):
+                        result += tokenizer.next.value
+                    else:
+                        raise Exception("O próximo token deve ser um número!")
+
+                if(tokenizer.next._type == '-'):
+                    tokenizer.selectNext()
+
+                    # O próximo deve ser um número:
+                    if(tokenizer.next.value.isdigit()):
+                        result -= tokenizer.next.value
+                    else:
+                        raise Exception("O próximo token deve ser um número!")
+
+            return result # Retorna resultado da operação
+        else:
+            raise Exception("O primeiro caracter deve ser um número!")
+
+
+    def run(self, source_code):
+
+        tokenizer  = Tokenizer(source_code)
+        # Pega próximo token
+        token = tokenizer.selectNext()
+
+        # Resultado da expressão analisada
+        result  = self.parseExpression()
+            
+        # Verifica se o último token é do tipo "EOF"
+        if (tokenizer.next._type != "EOF"):
+            raise Exception("Algo de errado aconteceu")
+
+        print(f"Resultado : {result}")
 
 if __name__ == '__main__':
     #std_input = (sys.argv)[1:]
     
-    string_input = '1     -+ 2'
-    result = main(string_input)
+    source_code = '1     -+ 2'
+    Parser().run(source_code)
