@@ -1,8 +1,5 @@
 import sys 
 
-from transform_input import transform_input
-from create_tree import create_tree
-
 INT   = 1
 PLUS  = 2
 MINUS = 3
@@ -13,22 +10,22 @@ class Token():
         Exemplo : (1 , INT)  = (value , type)
     '''
 
-    def __init__ (self, type : str , value : int):
-        self.type = type
+    def __init__ (self, _type : str , value : int):
+        self._type = _type
         self.value = value
 
     def __str__(self):
-        if (self.value.isdigit()):
-            return  "({0},INT)".format(self.value)
+        if (self._type ==  'INT'):
+            return  "({0} , 'INT')".format(self.value)
 
-        if (self.value = PLUS):
-            return  "({0},PLUS)".format(self.type)  
+        if (self._type == '+'):
+            return  "({0} , PLUS)".format(self._type)  
 
-        if (self.value = MINUS):
-            return  "({0},MINUS)".format(self.type)
+        if (self._type == '-'):
+            return  "({0} , MINUS)".format(self._type)
 
-        if (self.value = EOF):
-            return  "({0},EOF)".format(self.type)
+        if (self._type == ""):
+            return  "({0} , EOF)".format(self._type)
 
 class Tokenizer():
     '''
@@ -37,40 +34,70 @@ class Tokenizer():
 
     def __init__ (self, source : str):
         self.source = source 
-        self.position = None 
+        self.position = 0 
         self.next = None
 
-    def selectNext():
+    def selectNext(self):
+    '''
+        Atualiza a variável next com o próximo token passado
+    '''
         
-        value_str = ''
-        type_str  = ''
+        find_token = False
+        
+        while(not find_token):
+            if(self.source[self.position].isdigit()):
+                value_str = ''
 
-        if(self.source[position].isdigit())
+                while (self.source[self.position].isdigit()) : 
+                    value_str += self.source[self.position]
 
-            while (self.source[position].isdigit()) : 
-                value_str += self.source[position]
-            
-            self.next = Token(type = 'INT' , value = int(value_str))
-            self.position +=1
+                    if (self.position == len(self.source)-1 ):
+                        break
 
-        if (self.source[position] == '+'):
-            self.next = Token(type = self.source[position] , value = PLUS)
-            self.position +=1
+                    self.position +=1
 
-        if (self.source[position] == '-'):
-            self.next = Token(type = self.source[position] , value = MINUS)
-            self.position +=1
+                self.next = Token(_type = 'INT' , value = int(value_str))
+                find_token = True
 
-        if (self.source[position] == "\\n"):
-            self.next = Token(type = "" , value = EOF)
-            self.position +=1
+            elif(self.source[self.position] == '+'):
+                self.next = Token(_type = self.source[self.position] , value = PLUS)
+                self.position +=1
+
+                find_token = True
+
+            elif(self.source[self.position] == '-'):
+                self.next = Token(_type = self.source[self.position] , value = MINUS)
+                self.position +=1
+
+                find_token = True
+
+            elif(self.source[self.position] == "\\n"):
+                self.next = Token(_type = "" , value = EOF)
+                self.position +=1
+
+                find_token = True
+            else:
+                self.position +=1
+
 
 def main(string_input):
     
+    tokenizer = Tokenizer(string_input)
     
-    
-if __name__ == '__main__':
-    std_input = (sys.argv)[1:]
-    result = main(std_input[0])
+    tokenizer.selectNext()
+    print(tokenizer.next)
 
-    print(result)
+    tokenizer.selectNext()
+    print(tokenizer.next)
+
+    tokenizer.selectNext()
+    print(tokenizer.next)
+
+    tokenizer.selectNext()
+    print(tokenizer.next)
+
+if __name__ == '__main__':
+    #std_input = (sys.argv)[1:]
+    
+    string_input = '1     -+ 2'
+    result = main(string_input)
