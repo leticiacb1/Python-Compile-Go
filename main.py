@@ -56,26 +56,18 @@ class Tokenizer():
                 if(self.source[self.position].isdigit()):
                     value_str = ''
 
-                    print(f" Position dentro do while : {self.position} , caracter : {self.source[self.position]} , tipo do caracter : {type(self.source[self.position])}")
                     while (self.position < len(self.source) and self.source[self.position].isdigit()): 
-                        print(f"ENTREEEI")
                         value_str += self.source[self.position]
-                        print(" AQUIIII 2")
-                        self.position +=1
-                        print("SOMAAAAA")
-                        
+                        self.position +=1    
                 
                     self.next = Token(_type = 'INT' , value = int(value_str))
                     find_token = True
-                    
-                    print(f"Position : {self.position} , value = {value_str}")
 
                 elif(self.source[self.position] == '+'):
                     self.next = Token(_type = self.source[self.position] , value = PLUS)
                     self.position +=1
 
                     find_token = True
-                    print(f"Position : {self.position} , value = +")
 
                 elif(self.source[self.position] == '-'):
                     self.next = Token(_type = self.source[self.position] , value = MINUS)
@@ -83,11 +75,8 @@ class Tokenizer():
 
                     find_token = True
 
-                    print(f"Position : {self.position} , value = -")
                 else:
                     self.position +=1
-
-                    print(f"Position : {self.position} , value = Nada aqui")
             
 class Parser():
 
@@ -108,6 +97,9 @@ class Parser():
             
             result = Parser().tokenizer.next.value
             Parser().tokenizer.selectNext()  # Atualiza ara próximo Token
+
+            if(Parser().tokenizer.next._type not in ['+','-']):
+                raise Exception("O próximo token deve ser um operador!")
 
             while(Parser().tokenizer.next._type in ['+','-']):
                 print(Parser().tokenizer.next._type)
