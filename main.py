@@ -19,12 +19,12 @@ class Token():
             return  "({0} , 'INT')".format(self.value)
 
         if (self._type == '+'):
-            return  "({0} , PLUS)".format(self._type)  
+            return  "({0} , 'PLUS')".format(self._type)  
 
         if (self._type == '-'):
-            return  "({0} , MINUS)".format(self._type)
+            return  "({0} , 'MINUS')".format(self._type)
 
-        if (self._type == ""):
+        if (self._type == "EOF"):
             return  "({0} , EOF)".format(self._type)
 
 class Tokenizer():
@@ -41,100 +41,119 @@ class Tokenizer():
         '''
             Atualiza a variável next com o próximo token passado
         '''
-        
         find_token = False
         
         while(not find_token):
-            if(self.source[self.position].isdigit()):
-                value_str = ''
 
-                while (self.source[self.position].isdigit()) : 
-                    value_str += self.source[self.position]
+            if(self.position >= len(self.source)):
+                
+                # Caso EOF não tenha sido lançado ainda
+                if(self.next._type != "EOF"):
+                    self.next = Token(_type = 'EOF' , value = EOF)
+                break
 
-                    if (self.position == len(self.source)-1 ):
-                        break
+            else:
+                if(self.source[self.position].isdigit()):
+                    value_str = ''
 
+                    print(f" Position dentro do while : {self.position} , caracter : {self.source[self.position]} , tipo do caracter : {type(self.source[self.position])}")
+                    while (self.position < len(self.source) and self.source[self.position].isdigit()): 
+                        print(f"ENTREEEI")
+                        value_str += self.source[self.position]
+                        print(" AQUIIII 2")
+                        self.position +=1
+                        print("SOMAAAAA")
+                        
+                
+                    self.next = Token(_type = 'INT' , value = int(value_str))
+                    find_token = True
+                    
+                    print(f"Position : {self.position} , value = {value_str}")
+
+                elif(self.source[self.position] == '+'):
+                    self.next = Token(_type = self.source[self.position] , value = PLUS)
                     self.position +=1
 
-                self.next = Token(_type = 'INT' , value = int(value_str))
-                find_token = True
+                    find_token = True
+                    print(f"Position : {self.position} , value = +")
 
-            elif(self.source[self.position] == '+'):
-                self.next = Token(_type = self.source[self.position] , value = PLUS)
-                self.position +=1
+                elif(self.source[self.position] == '-'):
+                    self.next = Token(_type = self.source[self.position] , value = MINUS)
+                    self.position +=1
 
-                find_token = True
+                    find_token = True
 
-            elif(self.source[self.position] == '-'):
-                self.next = Token(_type = self.source[self.position] , value = MINUS)
-                self.position +=1
+                    print(f"Position : {self.position} , value = -")
+                else:
+                    self.position +=1
 
-                find_token = True
-
-            elif(self.source[self.position] == "\\n"):
-                self.next = Token(_type = "EOF" , value = EOF)
-                self.position +=1
-
-                find_token = True
-            else:
-                self.position +=1
-
-
+                    print(f"Position : {self.position} , value = Nada aqui")
+            
 class Parser():
-    tokenizer : object
 
-    def parseExpression(self):
+    tokenizer : object = None
+
+    @classmethod
+    def change_atribute_value(cls, source):
+        cls.tokenizer = Tokenizer(source)
+
+    @staticmethod
+    def parseExpression():
         '''
             Analisa se a sintaxe está aderente a gramática
         '''
 
-        # Primeiro caracter deve ser número !
-        if(tokenizer.next.value.isdigit()):
-            result = tokenizer.next.value
-            tokenizer.selectNext()  # Atualiza ara próximo Token
+        #Primeiro caracter deve ser número !
+        if(Parser().tokenizer.next._type == 'INT'):
+            
+            result = Parser().tokenizer.next.value
+            Parser().tokenizer.selectNext()  # Atualiza ara próximo Token
 
-            while(tokenizer.next._type in ['+','-']):
-
-                if(tokenizer.next._type == '+'):
-                    tokenizer.selectNext() 
-
+            while(Parser().tokenizer.next._type in ['+','-']):
+                print(Parser().tokenizer.next._type)
+                
+                if(Parser().tokenizer.next._type == '+'):
+                    Parser().tokenizer.selectNext() 
+                    
                     # O próximo deve ser um número:
-                    if(tokenizer.next.value.isdigit()):
-                        result += tokenizer.next.value
+                    if(Parser().tokenizer.next._type == 'INT'):
+                        result += Parser().tokenizer.next.value
                     else:
                         raise Exception("O próximo token deve ser um número!")
 
-                if(tokenizer.next._type == '-'):
-                    tokenizer.selectNext()
-
+                if(Parser().tokenizer.next._type == '-'):
+                    Parser().tokenizer.selectNext()
+                    
                     # O próximo deve ser um número:
-                    if(tokenizer.next.value.isdigit()):
-                        result -= tokenizer.next.value
+                    if(Parser().tokenizer.next._type == 'INT'):
+                        result -= Parser().tokenizer.next.value
+
                     else:
                         raise Exception("O próximo token deve ser um número!")
+
+                Parser().tokenizer.selectNext()
 
             return result # Retorna resultado da operação
         else:
             raise Exception("O primeiro caracter deve ser um número!")
 
-
-    def run(self, source_code):
-
-        tokenizer  = Tokenizer(source_code)
-        # Pega próximo token
-        token = tokenizer.selectNext()
-
+    @staticmethod
+    def run(source_code):
+        
+        # Instancia tokenizer e seleciona primeiro Token
+        Parser().change_atribute_value(source_code)
+        Parser().tokenizer.selectNext()
+        
         # Resultado da expressão analisada
-        result  = self.parseExpression()
+        result  = Parser().parseExpression()
             
         # Verifica se o último token é do tipo "EOF"
-        if (tokenizer.next._type != "EOF"):
+        print(Parser().tokenizer.next)
+        if (Parser().tokenizer.next._type != "EOF"):
             raise Exception("Algo de errado aconteceu")
 
         print(f"Resultado : {result}")
 
 if __name__ == '__main__':
-    #std_input = (sys.argv)[1:]
-    
-    source_code = '1     -+ 2'
-    Parser().run(source_code)
+    source_code = (sys.argv)[1:]
+    Parser().run(source_code[0])
