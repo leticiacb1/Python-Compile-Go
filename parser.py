@@ -24,7 +24,7 @@ class Parser():
             Parser().tokenizer.selectNext()  
 
             if(Parser().tokenizer.next.type not in ['+','-']):
-                raise InvalidExpression(f"\n Expected operator types | Got '{Parser().tokenizer.next}' after a number\n")
+                raise InvalidExpression(f"\n Expected operator types after a number\n")
 
             while(Parser().tokenizer.next.type in ['+','-']):
                 
