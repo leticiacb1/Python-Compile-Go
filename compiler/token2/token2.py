@@ -17,6 +17,12 @@ class Token():
         if (self.type == '-'):
             return  "({0} , 'MINUS')".format(self.type)
 
+        if (self.type == '*'):
+            return  "({0} , 'TIME')".format(self.type)
+
+        if (self.type == '/'):
+            return  "({0} , 'BAR')".format(self.type)
+
         if (self.type == "EOF"):
             return  "({0} , EOF)".format(self.type)
 

@@ -1,0 +1,7 @@
+EOF      = 'EOF'
+PLUS     = '+'
+MINUS    = '-'
+TIMES    = '*'
+BAR      = '/'
+INT      = 'INT'
+INVALID  = 'INVALID'

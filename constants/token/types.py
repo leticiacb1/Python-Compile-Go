@@ -1,5 +1,0 @@
-EOF   = 'EOF'
-PLUS  = '+'
-MINUS = '-'
-INT   = 'INT'
-INVALID  = 'INVALID'

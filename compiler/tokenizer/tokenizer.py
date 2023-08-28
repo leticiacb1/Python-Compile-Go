@@ -1,5 +1,5 @@
-from constants.token import (types, values)
-from token import Token
+from constants.token2 import (types, values)
+from token2 import Token
 
 class Tokenizer():
     '''
@@ -9,20 +9,17 @@ class Tokenizer():
     def __init__ (self, source : str):
         self.source = source 
         self.position = 0 
-        self.next = None
+        self.next = Token("", 0)
 
-    def selectNext(self):
+    def select_next(self):
         '''
             Atualiza a variável next com o próximo token passado
         '''
-        find_token = False
-        find_invalid = False
         
-        while(not find_token and not find_invalid):
+        while(True):
 
             if(self.position >= len(self.source)):
-                
-                # Caso EOF não tenha sido lançado ainda
+            
                 if(self.next.type != types.EOF):
                     self.next = Token(type = types.EOF , value = values.EOF)
                 break
@@ -36,24 +33,31 @@ class Tokenizer():
                         self.position +=1    
                 
                     self.next = Token(type = types.INT , value = int(value_str))
-                    find_token = True
+                    break
 
                 elif(self.source[self.position] == types.PLUS):
                     self.next = Token(type = types.PLUS , value = values.PLUS)
                     self.position +=1
-
-                    find_token = True
+                    break
 
                 elif(self.source[self.position] == types.MINUS):
                     self.next = Token(type = types.MINUS , value = values.MINUS)
                     self.position +=1
+                    break
+                
+                elif(self.source[self.position] == types.TIMES):
+                    self.next = Token(type = types.TIMES , value = values.TIMES)
+                    self.position +=1
+                    break
 
-                    find_token = True
+                elif(self.source[self.position] == types.BAR):
+                    self.next = Token(type = types.BAR , value = values.BAR)
+                    self.position +=1
+                    break
 
                 elif(self.source[self.position].isspace()):
                     self.position +=1
                 else:
                     self.next = Token(type = types.INVALID , value = values.INVALID)
                     self.position +=1
-                    
-                    find_invalid = True
+                    break 
