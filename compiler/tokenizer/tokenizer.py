@@ -54,7 +54,14 @@ class Tokenizer():
                     self.next = Token(type = types.BAR , value = values.BAR)
                     self.position +=1
                     break
-
+                elif(self.source[self.position == types.OPEN_BRACKET]):
+                    self.next = Token(type = types.OPEN_BRACKET , value = values.BRACKET)
+                    self.position +=1
+                    break
+                elif(self.source[self.position == types.CLOSE_BRACKET]):
+                    self.next = Token(type = types.CLOSE_BRACKET , value = values.BRACKET)
+                    self.position +=1
+                    break
                 elif(self.source[self.position].isspace()):
                     self.position +=1
                 else:
