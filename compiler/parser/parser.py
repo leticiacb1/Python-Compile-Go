@@ -38,47 +38,37 @@ class Parser():
             if(Parser().tokenizer.next.type == types.CLOSE_PARENTHESES):
                 Parser().tokenizer.select_next() # Busca próximo
                 return result
+            else:
+                raise InvalidExpression(f"\n Expected close parentheses type | Got {Parser().tokenizer.next}")
 
     @staticmethod
     def parser_term():
         '''
-            Analisa se a sintaxe está aderente a gramática
-            Loops de multiplicação e subtração
+            Analisa se a sintaxe está aderente a gramática.
+            Loops de multiplicação e subtração.
         '''
 
-        if(Parser().tokenizer.next.type != types.INT):
-            raise InvalidExpression(f"\n Expected number a number | Got {Parser().tokenizer.next} \n")
+        result = Parser().parser_factory()
 
-        result = Parser().tokenizer.next.value
-        Parser().tokenizer.select_next()  
-        
-        while(Parser().tokenizer.next.type in ['*','/']):
+        while(Parser().tokenizer.next.type in [types.TIMES , types.BAR]):
             
             if(Parser().tokenizer.next.type == types.TIMES):
-                Parser().tokenizer.select_next() 
-                
-                if(Parser().tokenizer.next.type == types.INT):
-                    result *= Parser().tokenizer.next.value
-                else:
-                    raise InvalidExpression(f"\n Expected number type | Got {Parser().tokenizer.next} after a operator")
+                Parser().tokenizer.select_next()
+                result *= Parser().parser_factory()
 
             if(Parser().tokenizer.next.type == types.BAR):
                 Parser().tokenizer.select_next()
-                
-                if(Parser().tokenizer.next.type == types.INT):
-                    result /= Parser().tokenizer.next.value
-                else:
-                    raise InvalidExpression(f"\n Expected number type | Got {Parser().tokenizer.next} after a operator")
+                result /= Parser().parser_factory()
 
-            Parser().tokenizer.select_next()
-        
-        return result 
-
+        return result
+    
     
     @staticmethod
     def parse_expression():
         '''
-            Analisa se a sintaxe está aderente a gramática
+            Analisa se a sintaxe está aderente a gramática.
+            Loops de soma e subtração.
+            Expressões binárias.
         '''
 
         result = Parser().parser_term()
@@ -93,7 +83,7 @@ class Parser():
                 Parser().tokenizer.select_next()
                 result += Parser().parser_term()
 
-        return result
+        return int(result)
 
     @staticmethod
     def run(source_code):
