@@ -13,32 +13,32 @@ class Parser():
     @staticmethod
     def parser_factory():
         '''
-        Verifica a existencia de operadores unitários
+        Verifica a existencia de operadores unários.
         '''
 
         if(Parser().tokenizer.next.type == types.INT):
             num_value = Parser().tokenizer.next.value
-            Parser().tokenizer.select_next() # Busca próximo
+            Parser().tokenizer.select_next() 
             
             return num_value
 
         elif(Parser().tokenizer.next.type == types.PLUS):
-            Parser().tokenizer.select_next() # Busca próximo
+            Parser().tokenizer.select_next()
             result = Parser().parser_factory()  
             return (1)*result
 
         elif(Parser().tokenizer.next.type == types.MINUS):
-            Parser().tokenizer.select_next() # Busca próximo
+            Parser().tokenizer.select_next() 
             result = Parser().parser_factory()
             return (-1)*result
 
         elif(Parser().tokenizer.next.type == types.OPEN_PARENTHESES):
-            Parser().tokenizer.select_next() # Busca próximo
+            Parser().tokenizer.select_next() 
 
-            result = Parser().parse_expression()      # Quando terminar , verificar se fecha bracket
+            result = Parser().parse_expression() 
 
             if(Parser().tokenizer.next.type == types.CLOSE_PARENTHESES):
-                Parser().tokenizer.select_next() # Busca próximo
+                Parser().tokenizer.select_next() 
                 return result
             else:
                 raise InvalidExpression(f"\n Expected close parentheses type | Got {Parser().tokenizer.next}")
@@ -99,6 +99,6 @@ class Parser():
         
         # Verifica se o último token é do tipo "EOF"
         if (Parser().tokenizer.next.type != "EOF"):
-            raise Exception("Algo de errado aconteceu")
+            raise InvalidExpression(f"\n Expected EOF type | Got {Parser().tokenizer.next}")
 
         print(f"Resultado : {result}")
