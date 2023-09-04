@@ -24,11 +24,13 @@ class Parser():
 
         elif(Parser().tokenizer.next.type == types.PLUS):
             Parser().tokenizer.select_next() # Busca próximo
-            Parser().parser_factory()
+            result = Parser().parser_factory()  
+            return (1)*result
 
         elif(Parser().tokenizer.next.type == types.MINUS):
             Parser().tokenizer.select_next() # Busca próximo
-            Parser().parser_factory()
+            result = Parser().parser_factory()
+            return (-1)*result
 
         elif(Parser().tokenizer.next.type == types.OPEN_PARENTHESES):
             Parser().tokenizer.select_next() # Busca próximo
@@ -58,7 +60,7 @@ class Parser():
 
             if(Parser().tokenizer.next.type == types.BAR):
                 Parser().tokenizer.select_next()
-                result /= Parser().parser_factory()
+                result //= Parser().parser_factory()
 
         return result
     
@@ -83,7 +85,7 @@ class Parser():
                 Parser().tokenizer.select_next()
                 result += Parser().parser_term()
 
-        return int(result)
+        return result
 
     @staticmethod
     def run(source_code):
