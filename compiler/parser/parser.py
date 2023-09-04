@@ -11,6 +11,35 @@ class Parser():
         cls.tokenizer = Tokenizer(source)
 
     @staticmethod
+    def parser_factory():
+        '''
+        Verifica a existencia de operadores unitários
+        '''
+
+        if(Parser().tokenizer.next.type == types.INT):
+            num_value = Parser().tokenizer.next.value
+            Parser().tokenizer.select_next() # Busca próximo
+            
+            return num_value
+
+        elif(Parser().tokenizer.next.type == types.PLUS):
+            Parser().tokenizer.select_next() # Busca próximo
+            Parser().parser_factory()
+
+        elif(Parser().tokenizer.next.type == types.MINUS):
+            Parser().tokenizer.select_next() # Busca próximo
+            Parser().parser_factory()
+
+        elif(Parser().tokenizer.next.type == types.OPEN_PARENTHESES):
+            Parser().tokenizer.select_next() # Busca próximo
+
+            result = Parser().parse_expression()      # Quando terminar , verificar se fecha bracket
+
+            if(Parser().tokenizer.next.type == types.CLOSE_PARENTHESES):
+                Parser().tokenizer.select_next() # Busca próximo
+                return result
+
+    @staticmethod
     def parser_term():
         '''
             Analisa se a sintaxe está aderente a gramática
