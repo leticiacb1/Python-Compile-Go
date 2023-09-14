@@ -1,4 +1,4 @@
-from constants.token2 import (types, values)
+from constants import (types, values)
 from token2 import Token
 
 class Tokenizer():
