@@ -1,5 +1,5 @@
 from .node import Node
-from constants import types
+from constants import operators
 
 class UnOp(Node):
     '''
@@ -10,10 +10,10 @@ class UnOp(Node):
         super().__init__(value)
 
     def evaluate(self):
-        if (self.value == types.PLUS):
+        if (self.value == operators._Type.PLUS):
             return (1)*self.children[0].evaluate()
 
-        if (self.value == types.MINUS):
+        if (self.value == operators._Type.MINUS):
             return (-1)*self.children[0].evaluate()
 
         raise TypeError

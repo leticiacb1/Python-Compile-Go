@@ -1,6 +1,7 @@
 from tokenizer import Tokenizer
-from constants import (types, values)
-from errors.parser import InvalidExpression
+from constants import delimiters, eof, invalid , number, operators
+from errors.parser import InvalidExpression 
+from errors.tokens import InvalidToken
 from node import (IntVal, BinOp, UnOp, Node)
 
 class Parser():
@@ -12,54 +13,54 @@ class Parser():
         cls.tokenizer = Tokenizer(source)
 
     @staticmethod
-    def parser_factory():
+    def parser_factor() -> Node:
         '''
         Verifica a existencia de operadores unários.
         '''
-
-        if(Parser().tokenizer.next.type == types.INT):
-            num_value = Parser().tokenizer.next.value
+        tokens = Parser().tokenizer
+        if(tokens.next.type == number._Type.INT):
+            num_value = tokens.next.value
             node = IntVal(num_value)
 
-            Parser().tokenizer.select_next() 
+            tokens.select_next() 
             
             return node
 
-        elif(Parser().tokenizer.next.type == types.PLUS):
-            Parser().tokenizer.select_next()
+        elif(tokens.next.type == operators._Type.PLUS):
+            tokens.select_next()
             
-            node = UnOp(types.PLUS)
-            child = Parser().parser_factory()  
+            node = UnOp(operators._Type.PLUS)
+            child = Parser().parser_factor()  
             
             # Add child
             node.add_child(child)
 
             return node
 
-        elif(Parser().tokenizer.next.type == types.MINUS):
-            Parser().tokenizer.select_next() 
+        elif(tokens.next.type == operators._Type.MINUS):
+            tokens.select_next() 
 
-            node = UnOp(types.MINUS)
-            child = Parser().parser_factory()  
+            node = UnOp(operators._Type.MINUS)
+            child = Parser().parser_factor()  
             
             # Add child
             node.add_child(child)
             
             return node
 
-        elif(Parser().tokenizer.next.type == types.OPEN_PARENTHESES):
-            Parser().tokenizer.select_next() 
+        elif(tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+            tokens.select_next() 
 
             node = Parser().parse_expression() 
 
-            if(Parser().tokenizer.next.type == types.CLOSE_PARENTHESES):
-                Parser().tokenizer.select_next() 
+            if(tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
+                tokens.select_next() 
                 return node
             else:
-                raise InvalidExpression(f"\n Expected close parentheses type | Got {Parser().tokenizer.next}")
+                raise InvalidExpression(f"\n Expected close parentheses type | Got {tokens.next}")
 
         else:
-            raise InvalidExpression(f"\n Invalid token") 
+            raise InvalidToken(f"\n Token type recived : {tokens.next.type}") 
 
     @staticmethod
     def parser_term() -> Node:
@@ -67,36 +68,35 @@ class Parser():
             Analisa se a sintaxe está aderente a gramática.
             Loops de multiplicação e subtração.
         '''
+        tokens = Parser().tokenizer
+        left_node = Parser().parser_factor()
 
-        left_node = Parser().parser_factory()
-
-        while(Parser().tokenizer.next.type in [types.TIMES , types.BAR]):
+        while(tokens.next.type in [operators._Type.TIMES , operators._Type.BAR]):
             
-            if(Parser().tokenizer.next.type == types.TIMES):
-                op_node = BinOp(types.TIMES)
+            if(tokens.next.type == operators._Type.TIMES):
+                op_node = BinOp(operators._Type.TIMES)
                 op_node.add_child(left_node)
 
-                Parser().tokenizer.select_next()
+                tokens.select_next()
                 
-                right_node = Parser().parser_factory()
+                right_node = Parser().parser_factor()
                 op_node.add_child(right_node)
 
                 left_node = op_node
 
-            elif(Parser().tokenizer.next.type == types.BAR):
-                op_node = BinOp(types.BAR)
+            elif(tokens.next.type == operators._Type.BAR):
+                op_node = BinOp(operators._Type.BAR)
                 op_node.add_child(left_node)
 
-                Parser().tokenizer.select_next()
+                tokens.select_next()
                 
-                right_node = Parser().parser_factory()
+                right_node = Parser().parser_factor()
                 op_node.add_child(right_node)
 
                 left_node = op_node
 
             else:
-                raise InvalidExpression(f"\n Invalid token") 
-
+                raise InvalidToken(f"\n Token type recived : {tokens.next.type}") 
 
         return left_node
     
@@ -108,27 +108,27 @@ class Parser():
             Loops de soma e subtração.
             Expressões binárias.
         '''
-
+        tokens = Parser().tokenizer
         left_node = Parser().parser_term()
 
-        while(Parser().tokenizer.next.type in [types.PLUS , types.MINUS]):
+        while(tokens.next.type in [operators._Type.PLUS , operators._Type.MINUS]):
             
-            if(Parser().tokenizer.next.type == types.PLUS):
-                op_node = BinOp(types.PLUS)
+            if(tokens.next.type == operators._Type.PLUS):
+                op_node = BinOp(operators._Type.PLUS)
                 op_node.add_child(left_node)
 
-                Parser().tokenizer.select_next()
+                tokens.select_next()
                 
                 right_node = Parser().parser_term()
                 op_node.add_child(right_node)
 
                 left_node = op_node
 
-            elif(Parser().tokenizer.next.type == types.MINUS):
-                op_node = BinOp(types.MINUS)
+            elif(tokens.next.type == operators._Type.MINUS):
+                op_node = BinOp(operators._Type.MINUS)
                 op_node.add_child(left_node)
 
-                Parser().tokenizer.select_next()
+                tokens.select_next()
                 
                 right_node = Parser().parser_term()
                 op_node.add_child(right_node)
@@ -136,7 +136,7 @@ class Parser():
                 left_node = op_node
             
             else:
-                raise InvalidExpression(f"\n Invalid token") 
+                raise InvalidToken(f"\n Token type recived : {tokens.next.type}") 
 
         return left_node
 
