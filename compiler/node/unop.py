@@ -10,10 +10,10 @@ class UnOp(Node):
         super().__init__(value)
 
     def evaluate(self):
-        if (self.value == type.PLUS):
+        if (self.value == types.PLUS):
             return (1)*self.children[0].evaluate()
 
-        if (self.value == type.MINUS):
+        if (self.value == types.MINUS):
             return (-1)*self.children[0].evaluate()
 
         raise TypeError

@@ -1,6 +1,7 @@
 from tokenizer import Tokenizer
-from constants.token2 import (types, values)
+from constants import (types, values)
 from errors.parser import InvalidExpression
+from node import (IntVal, BinOp, UnOp, Node)
 
 class Parser():
 
@@ -18,51 +19,86 @@ class Parser():
 
         if(Parser().tokenizer.next.type == types.INT):
             num_value = Parser().tokenizer.next.value
+            node = IntVal(num_value)
+
             Parser().tokenizer.select_next() 
             
-            return num_value
+            return node
 
         elif(Parser().tokenizer.next.type == types.PLUS):
             Parser().tokenizer.select_next()
-            result = Parser().parser_factory()  
-            return (1)*result
+            
+            node = UnOp(types.PLUS)
+            child = Parser().parser_factory()  
+            
+            # Add child
+            node.add_child(child)
+
+            return node
 
         elif(Parser().tokenizer.next.type == types.MINUS):
             Parser().tokenizer.select_next() 
-            result = Parser().parser_factory()
-            return (-1)*result
+
+            node = UnOp(types.MINUS)
+            child = Parser().parser_factory()  
+            
+            # Add child
+            node.add_child(child)
+            
+            return node
 
         elif(Parser().tokenizer.next.type == types.OPEN_PARENTHESES):
             Parser().tokenizer.select_next() 
 
-            result = Parser().parse_expression() 
+            node = Parser().parse_expression() 
 
             if(Parser().tokenizer.next.type == types.CLOSE_PARENTHESES):
                 Parser().tokenizer.select_next() 
-                return result
+                return node
             else:
                 raise InvalidExpression(f"\n Expected close parentheses type | Got {Parser().tokenizer.next}")
 
+        else:
+            raise InvalidExpression(f"\n Invalid token") 
+
     @staticmethod
-    def parser_term():
+    def parser_term() -> Node:
         '''
             Analisa se a sintaxe está aderente a gramática.
             Loops de multiplicação e subtração.
         '''
 
-        result = Parser().parser_factory()
+        left_node = Parser().parser_factory()
 
         while(Parser().tokenizer.next.type in [types.TIMES , types.BAR]):
             
             if(Parser().tokenizer.next.type == types.TIMES):
-                Parser().tokenizer.select_next()
-                result *= Parser().parser_factory()
+                op_node = BinOp(types.TIMES)
+                op_node.add_child(left_node)
 
-            if(Parser().tokenizer.next.type == types.BAR):
                 Parser().tokenizer.select_next()
-                result //= Parser().parser_factory()
+                
+                right_node = Parser().parser_factory()
+                op_node.add_child(right_node)
 
-        return result
+                left_node = op_node
+
+            elif(Parser().tokenizer.next.type == types.BAR):
+                op_node = BinOp(types.BAR)
+                op_node.add_child(left_node)
+
+                Parser().tokenizer.select_next()
+                
+                right_node = Parser().parser_factory()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+
+            else:
+                raise InvalidExpression(f"\n Invalid token") 
+
+
+        return left_node
     
     
     @staticmethod
@@ -73,32 +109,49 @@ class Parser():
             Expressões binárias.
         '''
 
-        result = Parser().parser_term()
+        left_node = Parser().parser_term()
 
         while(Parser().tokenizer.next.type in [types.PLUS , types.MINUS]):
             
-            if(Parser().tokenizer.next.type == types.MINUS):
-                Parser().tokenizer.select_next()
-                result -= Parser().parser_term()
-
             if(Parser().tokenizer.next.type == types.PLUS):
-                Parser().tokenizer.select_next()
-                result += Parser().parser_term()
+                op_node = BinOp(types.PLUS)
+                op_node.add_child(left_node)
 
-        return result
+                Parser().tokenizer.select_next()
+                
+                right_node = Parser().parser_term()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+
+            elif(Parser().tokenizer.next.type == types.MINUS):
+                op_node = BinOp(types.MINUS)
+                op_node.add_child(left_node)
+
+                Parser().tokenizer.select_next()
+                
+                right_node = Parser().parser_term()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+            
+            else:
+                raise InvalidExpression(f"\n Invalid token") 
+
+        return left_node
 
     @staticmethod
-    def run(source_code):
-        
+    def run(code):
+
         # Instancia tokenizer e seleciona primeiro Token
-        Parser().change_atribute_value(source_code)
+        Parser().change_atribute_value(code)
         Parser().tokenizer.select_next()
         
         # Resultado da expressão analisada
-        result  = Parser().parse_expression()
+        tree  = Parser().parse_expression()
         
         # Verifica se o último token é do tipo "EOF"
         if (Parser().tokenizer.next.type != "EOF"):
             raise InvalidExpression(f"\n Expected EOF type | Got {Parser().tokenizer.next}")
 
-        print(f"Resultado : {result}")
+        return tree

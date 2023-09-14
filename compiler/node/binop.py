@@ -11,16 +11,16 @@ class BinOp(Node):
         super().__init__(value)
 
     def evaluate(self):
-        if (self.value == type.PLUS):
+        if (self.value == types.PLUS):
             return self.children[0].evaluate() + self.children[1].evaluate()
 
-        if (self.value == type.MINUS):
+        if (self.value == types.MINUS):
             return self.children[0].evaluate() - self.children[1].evaluate()
 
-        if (self.value == type.BAR):
+        if (self.value == types.BAR):
             return self.children[0].evaluate() // self.children[1].evaluate()
 
-        if (self.value == type.TIMES):
+        if (self.value == types.TIMES):
             return self.children[0].evaluate() * self.children[1].evaluate()
 
         raise TypeError
