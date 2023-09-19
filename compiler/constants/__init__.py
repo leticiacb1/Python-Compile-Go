@@ -3,4 +3,5 @@ from .number import *
 from .invalid import *
 from .eof import *
 from .delimiters import *
-from .reserved_words import *
+from .functions import *
+from .identifier import *

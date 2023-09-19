@@ -1,5 +1,6 @@
-from constants import delimiters, eof, invalid, number , operators
-from tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter
+import re
+from constants import delimiters, eof, invalid, number , operators , function , identifier
+from tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier
 
 class Tokenizer():
     '''
@@ -10,6 +11,8 @@ class Tokenizer():
         self.source = source 
         self.position = 0 
         self.next = Tokens("", 0)
+
+        reserved_words = ('println')
 
     def select_next(self):
         '''
@@ -61,6 +64,26 @@ class Tokenizer():
                 elif(self.source[self.position] == delimiters._Type.CLOSE_PARENTHESES):
                     self.next = TokenDelimiter(type = delimiters._Type.CLOSE_PARENTHESES , value = delimiters._Value.PARENTHESES)
                     self.position +=1
+                    break
+                elif(self.source[self.position] == delimiters._Type.END_OF_LINE):
+                    self.next = TokenDelimiter(type = delimiters._Type.END_OF_LINE , value = delimiters._Value.END_OF_LINE)
+                    self.position +=1
+                    break
+                elif(self.source[self.position].isalpha()):
+                    # Pode ser uma palavra reservada ou um caracter
+                    value_str = ''
+
+                    while(self.position < len(self.source) and (re.search(r'[a-zA-Z0-9_]+', self.source[self.position])))
+                        value_str += self.source[self.position]
+                        self.position +=1  
+                    
+                    if value_str in reserved_words:
+                        # Function
+                        self.next = TokenFunction(type = function._Type.PRINTLN , value = function._Value.PRINTLN)
+                    else:
+                        # Identififer / Variable
+                        self.next = TokenIdentifier(type = identifier._Type.IDENTIFIER, value = value_str)
+
                     break
                 elif(self.source[self.position].isspace()):
                     self.position +=1

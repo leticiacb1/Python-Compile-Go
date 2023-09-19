@@ -1,6 +1,6 @@
 from tokens import Tokens
 
-class TokenIdentifier (Tokens):
+class TokenFunction (Tokens):
 
     def __init__ (self, type : str , value : int):
         super().__init__(type, value)
