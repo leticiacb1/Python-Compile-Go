@@ -2,7 +2,7 @@ from tokenizer import Tokenizer
 from constants import delimiters, eof, invalid , number, operators , functions , identifier
 from errors.parser import InvalidExpression 
 from errors.tokens import InvalidToken
-from node import (IntVal, BinOp, UnOp, Noop, Identifier, Assigment, Node , Println)
+from node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node , Println , Block)
 
 class Parser():
 
@@ -150,8 +150,8 @@ class Parser():
         tokens = Parser().tokenizer
         
         if (tokens.next.type == delimiters._Type.END_OF_LINE):
-            return Noop()
-        elif(tokens.next.type == delimiters._Type.IDENTIFIER):
+            return  NoOp()
+        elif(tokens.next.type == identifier._Type.IDENTIFIER):
             variable = tokens.next.value
             node_var = Identifier(value = variable)
 
@@ -196,7 +196,7 @@ class Parser():
     @staticmethod
     def block():
 
-        node_block = Block()
+        node_block = Block(value = 'BLOCK')
         tokens = Parser().tokenizer
 
         while(tokens.next.type != "EOF"):
