@@ -17,3 +17,6 @@ class TokenOperator(Tokens):
 
         if (self.type == '/'):
             return  "({0} , 'BAR')".format(self.type)
+
+        if (self.type == '='):
+            return  "({0} , 'EQUAL')".format(self.type)

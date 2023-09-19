@@ -57,6 +57,10 @@ class Tokenizer():
                     self.next = TokenOperator(type = operators._Type.BAR , value = operators._Value.BAR)
                     self.position +=1
                     break
+                elif(self.source[self.position] == operators._Type.EQUAL):
+                    self.next = TokenOperator(type = operators._Type.EQUAL , value = operators._Value.EQUAL)
+                    self.position +=1
+                    break
                 elif(self.source[self.position] == delimiters._Type.OPEN_PARENTHESES):
                     self.next = TokenDelimiter(type = delimiters._Type.OPEN_PARENTHESES , value = delimiters._Value.PARENTHESES)
                     self.position +=1

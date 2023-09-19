@@ -1,8 +1,8 @@
 from tokenizer import Tokenizer
-from constants import delimiters, eof, invalid , number, operators
+from constants import delimiters, eof, invalid , number, operators , functions , identifier
 from errors.parser import InvalidExpression 
 from errors.tokens import InvalidToken
-from node import (IntVal, BinOp, UnOp, Node)
+from node import (IntVal, BinOp, UnOp, Noop, Identifier, Assigment, Node , Println)
 
 class Parser():
 
@@ -24,6 +24,10 @@ class Parser():
 
             tokens.select_next() 
             
+            return node
+
+        elif(tokens.next.type == identifier._Type.IDENTIFIER):
+            node = Identifier(value = tokens.next.value)
             return node
 
         elif(tokens.next.type == operators._Type.PLUS):
@@ -142,11 +146,64 @@ class Parser():
 
     @staticmethod
     def statement():
-        ...
+
+        tokens = Parser().tokenizer
+        
+        if (tokens.next.type == delimiters._Type.END_OF_LINE):
+            return Noop()
+        elif(tokens.next.type == delimiters._Type.IDENTIFIER):
+            variable = tokens.next.value
+            node_var = Identifier(value = variable)
+
+            tokens.select_next()
+
+            if(tokens.next.type == operators._Type.EQUAL):
+                node_assigment = Assigment(value = operators._Type.EQUAL)
+
+                tokens.select_next()
+
+                expression = Parser().parse_expression()
+
+                # Add child
+                node_assigment.add_child(node_var)   # Left
+                node_assigment.add_child(expression) # Right
+                
+            else:
+                raise InvalidExpression(f"\n Expected assigment token type | Got {tokens.next}")
+
+            return node_assigment  # Retorna ??
+
+        elif(tokens.next.type == functions._Type.PRINTLN):
+            node_println = Println(value = functions._Type.PRINTLN)
+
+            if(tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+                tokens.select_next() 
+
+                expression = Parser().parse_expression() 
+
+                if(tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
+                    tokens.select_next() 
+                else:
+                    raise InvalidExpression(f"\n Expected close parentheses type | Got {tokens.next}")
+
+                node_println.add_child(expression)
+                return node_println # Retorna ?
+        
+        else:
+            raise InvalidToken(f"\n Token type recived : {tokens.next.type}") 
+
 
     @staticmethod
     def block():
-        ...
+
+        node_block = Block()
+        tokens = Parser().tokenizer
+
+        while(tokens.next.type != "EOF"):
+            state = Parser().statement()
+            node_block.add_child(state)
+
+        return node_block
 
     @staticmethod
     def run(code):
@@ -156,7 +213,7 @@ class Parser():
         Parser().tokenizer.select_next()
 
         # Resultado da expressão analisada
-        tree  = Parser().parse_expression()
+        tree  = Parser().block()
         
         # Verifica se o último token é do tipo "EOF"
         if (Parser().tokenizer.next.type != "EOF"):

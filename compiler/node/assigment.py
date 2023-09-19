@@ -1,6 +1,6 @@
 from .node import Node
 
-class Assignment(Node):
+class Assigment(Node):
     '''
     Operações de atribuição (=)
     Possui dois filhos. 
