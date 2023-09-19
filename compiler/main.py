@@ -1,15 +1,27 @@
 import sys
 from parser import Parser
 from prepro import PrePro
+from table.symbol_table import SymbolTable
+
+def load_file(filename):
+    with open(filename, "r") as f:
+        lines = f.readlines()
+    return lines
 
 if __name__ == '__main__':
     
-    source_code = (sys.argv)[1:]
+    #Lê o aruqivo passado na linha de comando
+    filename = (sys.argv)[1:]
+    source_code_lines = load_file(filename[0])
 
     # Retira comentários
-    code = PrePro().pre_pro(source_code[0])
+    code = PrePro().pre_pro(source_code_lines)
+    print(code)
+
+    # Instancia tabela de simbolos
+    table = SymbolTable()
 
     # Resolve a arvore
-    tree = Parser.run(code)
-    result = tree.evaluate()
+    tree = Parser().run(code)
+    result = tree.evaluate(table)
     print(result)

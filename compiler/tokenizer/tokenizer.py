@@ -1,5 +1,5 @@
 import re
-from constants import delimiters, eof, invalid, number , operators , function , identifier
+from constants import delimiters, eof, invalid, number , operators , functions , identifier
 from tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier
 
 class Tokenizer():
@@ -73,7 +73,7 @@ class Tokenizer():
                     # Pode ser uma palavra reservada ou um caracter
                     value_str = ''
 
-                    while(self.position < len(self.source) and (re.search(r'[a-zA-Z0-9_]+', self.source[self.position])))
+                    while(self.position < len(self.source) and (re.search(r'[a-zA-Z0-9_]+', self.source[self.position]))):
                         value_str += self.source[self.position]
                         self.position +=1  
                     

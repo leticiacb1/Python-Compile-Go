@@ -1,14 +1,10 @@
-class SymbolTable():
+class SymbolTable:
 
     def __init__(self):
-        self.tabel = {}
+        self.table = {}
 
     def getter(self, identifier):
         return self.tabel[identifier]
 
     def setter(self, identifier , value):
-
-        if identifier in self.table.keys():
-            self.tabel[identifier] = value
-        else:
-            self.table.append({identifier : value}) 
+        self.table[identifier] = value 

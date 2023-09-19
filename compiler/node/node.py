@@ -13,5 +13,5 @@ class Node(ABC):
             raise ValueError     
 
     @abstractmethod
-    def evaluate(self):
+    def evaluate(self , symbol_table):
         pass

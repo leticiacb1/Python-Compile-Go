@@ -8,5 +8,5 @@ class NoOp(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self):
+    def evaluate(self , symbol_table):
         return None

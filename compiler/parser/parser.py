@@ -141,12 +141,20 @@ class Parser():
         return left_node
 
     @staticmethod
+    def statement():
+        ...
+
+    @staticmethod
+    def block():
+        ...
+
+    @staticmethod
     def run(code):
 
         # Instancia tokenizer e seleciona primeiro Token
         Parser().change_atribute_value(code)
         Parser().tokenizer.select_next()
-        
+
         # Resultado da expressão analisada
         tree  = Parser().parse_expression()
         

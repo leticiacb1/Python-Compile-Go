@@ -6,10 +6,13 @@ class PrePro:
     Retirando comentários.
     '''
     @staticmethod
-    def filter(code: str):
+    def filter(code: str) -> str:
         return re.sub(r"\s*//.*", "", code)
 
     @staticmethod
-    def pre_pro(code: str):
-        code = PrePro().filter(code)
+    def pre_pro(lines_code: list[str]) -> str:
+        code = ''
+        for line in lines_code:
+            code += PrePro().filter(line)
+        
         return code 
