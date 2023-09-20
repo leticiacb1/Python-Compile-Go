@@ -1,1 +1,8 @@
-3+6/3   *  2 -+-  +  2*4/2 + 0/1 -((6+ ((4)))/(2)) // Teste // Teste 2
+//Começa codigo
+
+x = 2
+y = 3
+
+z = x+y
+
+prinln(z)

@@ -7,10 +7,7 @@ class Node(ABC):
         self.children = []
     
     def add_child(self, child ):
-        self.children.append(child)   
-
-        if(len(self.children) > 2):
-            raise ValueError     
+        self.children.append(child)     
 
     @abstractmethod
     def evaluate(self , symbol_table):

@@ -12,7 +12,7 @@ class Tokenizer():
         self.position = 0 
         self.next = Tokens("", 0)
 
-        reserved_words = ('println')
+        self.reserved_words = ('println')
 
     def select_next(self):
         '''
@@ -81,7 +81,7 @@ class Tokenizer():
                         value_str += self.source[self.position]
                         self.position +=1  
                     
-                    if value_str in reserved_words:
+                    if value_str in self.reserved_words:
                         # Function
                         self.next = TokenFunction(type = function._Type.PRINTLN , value = function._Value.PRINTLN)
                     else:

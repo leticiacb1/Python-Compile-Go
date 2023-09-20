@@ -20,4 +20,3 @@ class Println(Node):
     def evaluate(self, symbol_table):
         expression_result = self.children[0].evaluate(symbol_table)
         print(expression_result)
-        return expression_result
