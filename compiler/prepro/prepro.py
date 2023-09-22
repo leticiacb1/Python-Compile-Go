@@ -7,7 +7,8 @@ class PrePro:
     '''
     @staticmethod
     def filter(code: str) -> str:
-        return re.sub(r"\s*//.*", "", code)
+        code = re.sub(r"\s*//.*", "", code)
+        return re.sub(r'\n', '', code)
 
     @staticmethod
     def pre_pro(lines_code: list[str]) -> str:

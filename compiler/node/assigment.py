@@ -19,4 +19,4 @@ class Assigment(Node):
         
         # Valor do filho da direita
         result = self.children[1].evaluate(symbol_table)
-        symbol_table.setter(value , result)    
+        symbol_table.setter(self.children[0].value , result)

@@ -1,8 +1,8 @@
 import re
-from constants import delimiters, eof, invalid, number , operators , functions , identifier
-from tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier
+from compiler.constants import delimiters, eof, invalid, number , operators , functions , identifier
+from compiler.tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier
 
-class Tokenizer():
+class Tokenizer:
     '''
         Responsável por capturar um token (átomo) do texto-fonte
     '''
@@ -12,7 +12,9 @@ class Tokenizer():
         self.position = 0 
         self.next = Tokens("", 0)
 
-        self.reserved_words = ('println')
+        self.reserved_words = {
+            'println': {'type':functions._Type.PRINTLN , 'value': functions._Value.PRINTLN}
+        } # ('println')
 
     def select_next(self):
         '''
@@ -33,7 +35,7 @@ class Tokenizer():
 
                     while (self.position < len(self.source) and self.source[self.position].isdigit()): 
                         value_str += self.source[self.position]
-                        self.position +=1    
+                        self.position += 1    
                 
                     self.next = TokenNumber(type = number._Type.INT , value = int(value_str))
                     break
@@ -81,9 +83,9 @@ class Tokenizer():
                         value_str += self.source[self.position]
                         self.position +=1  
                     
-                    if value_str in self.reserved_words:
+                    if value_str in self.reserved_words.keys():
                         # Function
-                        self.next = TokenFunction(type = function._Type.PRINTLN , value = function._Value.PRINTLN)
+                        self.next = TokenFunction(type = self.reserved_words[value_str]['type'] , value = self.reserved_words[value_str]['value'])
                     else:
                         # Identififer / Variable
                         self.next = TokenIdentifier(type = identifier._Type.IDENTIFIER, value = value_str)

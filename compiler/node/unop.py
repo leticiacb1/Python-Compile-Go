@@ -1,5 +1,5 @@
 from .node import Node
-from constants import operators
+from compiler.constants import operators
 
 class UnOp(Node):
     '''

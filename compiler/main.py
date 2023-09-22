@@ -16,7 +16,6 @@ if __name__ == '__main__':
 
     # Retira comentários
     code = PrePro().pre_pro(source_code_lines)
-    print(code)
 
     # Instancia tabela de simbolos
     table = SymbolTable()
@@ -24,4 +23,3 @@ if __name__ == '__main__':
     # Resolve a arvore
     tree = Parser().run(code)
     result = tree.evaluate(table)
-    print(result)

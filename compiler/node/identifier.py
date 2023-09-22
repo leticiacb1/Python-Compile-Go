@@ -10,4 +10,4 @@ class Identifier(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table):
-        return symbol_table.getter(value)   
+        return symbol_table.getter(self.value)

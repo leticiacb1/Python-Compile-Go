@@ -9,6 +9,9 @@ class Node(ABC):
     def add_child(self, child ):
         self.children.append(child)     
 
+    def __str__(self):
+        return  "<Node (value : {0})>".format(self.value)
+
     @abstractmethod
     def evaluate(self , symbol_table):
         pass
