@@ -13,7 +13,7 @@ class Tokenizer:
         self.next = Tokens("", 0)
 
         self.reserved_words = {
-            'println': {'type':functions._Type.PRINTLN , 'value': functions._Value.PRINTLN}
+            'Println': {'type':functions._Type.PRINTLN , 'value': functions._Value.PRINTLN}
         } # ('println')
 
     def select_next(self):
@@ -82,7 +82,7 @@ class Tokenizer:
                     while(self.position < len(self.source) and (re.search(r'[a-zA-Z0-9_]+', self.source[self.position]))):
                         value_str += self.source[self.position]
                         self.position +=1  
-                    
+
                     if value_str in self.reserved_words.keys():
                         # Function
                         self.next = TokenFunction(type = self.reserved_words[value_str]['type'] , value = self.reserved_words[value_str]['value'])
