@@ -69,4 +69,4 @@ class For(Node):
 
         while condition.evaluate(symbol_table):
             block.evaluate(symbol_table)
-            increment.evaluate()                    # Devo setar o incremente com valor +1 ? 
+            increment.evaluate()                    # Devo setar o incremente com valor +1 ?

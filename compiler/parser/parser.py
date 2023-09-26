@@ -2,7 +2,7 @@ from compiler.tokenizer import Tokenizer
 from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , If, Block , Program)
+from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , If , For, Block , Program)
 
 
 class Parser:
