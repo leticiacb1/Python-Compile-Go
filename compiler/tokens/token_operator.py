@@ -20,3 +20,12 @@ class TokenOperator(Tokens):
 
         if (self.type == '='):
             return  "({0} , 'EQUAL')".format(self.type)
+
+        if (self.type == '!'):
+            return  "({0} , 'NOT')".format(self.type)
+
+        if (self.type == '&&'):
+            return  "({0} , 'AND')".format(self.type)
+
+        if (self.type == '||'):
+            return  "({0} , 'OR')".format(self.type)
