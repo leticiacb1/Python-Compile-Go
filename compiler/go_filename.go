@@ -15,4 +15,7 @@ if x < 2 {
 
 for i = 0 ; i < 10 ; i = i + 1 {
     Println(i)
+    if i < 5 {
+        Println(0)
+    }
 }
