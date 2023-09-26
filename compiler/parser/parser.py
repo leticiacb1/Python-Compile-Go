@@ -86,6 +86,7 @@ class Parser:
                 raise InvalidExpression(f"\n [FACTOR] Expected close parentheses type | Got {tokens.next}")
 
         elif(tokens.next.type == functions._Type.SCANLN):
+            tokens.select_next()
             node = Scanln(value = functions._Type.SCANLN)
 
             if (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
