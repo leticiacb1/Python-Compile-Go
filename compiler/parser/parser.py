@@ -147,7 +147,27 @@ class Parser:
 
     @staticmethod
     def parser_bool_term():
-        ...
+        tokens = Parser().tokenizer
+
+        left_node = Parser().parser_rl_expressions()
+
+        while (tokens.next.type == operators._Type.AND):
+
+            if (tokens.next.type == operators._Type.AND):
+                op_node = BinOp(operators._Type.AND)
+                op_node.add_child(left_node)
+
+                tokens.select_next()
+
+                right_node = Parser().parser_rl_expressions()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+
+            else:
+                raise InvalidToken(f"\n [BOOL TERM EXPRESSION]Token type recived : {tokens.next.type}")
+
+        return left_node
 
     @staticmethod
     def parse_bool_expression():
