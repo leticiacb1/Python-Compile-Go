@@ -6,8 +6,13 @@ z__ = x + y_1
 // Saida final
 Println(x)
 Println(z__+1)
+
 if x < 2 {
     Println(1)
 }else{
     Println(0)
+}
+
+for i = 0 ; i < 10 ; i = i + 1 {
+    Println(i)
 }

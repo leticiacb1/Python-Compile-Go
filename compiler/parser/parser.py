@@ -13,6 +13,29 @@ class Parser:
         cls.tokenizer = Tokenizer(source)
 
     @staticmethod
+    def parser_assigment() -> Node:
+
+        tokens = Parser().tokenizer
+
+        node_identifier = Identifier(value=tokens.next.value)
+        tokens.select_next()
+
+        if (tokens.next.type == operators._Type.EQUAL):
+
+            tokens.select_next()
+
+            bool_expression = Parser().parse_bool_expression()  # Mudo o assigment
+
+            node_assigment = Assigment(value=operators._Type.EQUAL)
+            node_assigment.add_child(node_identifier)  # Left
+            node_assigment.add_child(bool_expression)  # Right
+
+        else:
+            raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
+
+        return node_assigment
+
+    @staticmethod
     def parser_factor() -> Node:
         '''
         Verifica a existencia de operadores unários.
@@ -267,24 +290,7 @@ class Parser:
             return NoOp(value='END_OF_LINE')
 
         elif (tokens.next.type == identifier._Type.IDENTIFIER):
-            node_identifier = Identifier(value=tokens.next.value)
-            tokens.select_next()
-
-            if (tokens.next.type == operators._Type.EQUAL):
-
-                tokens.select_next()
-
-                bool_expression = Parser().parse_bool_expression() # Mudo o assigment
-
-                node_assigment = Assigment(value=operators._Type.EQUAL)
-                node_assigment.add_child(node_identifier)  # Left
-                node_assigment.add_child(bool_expression)  # Right
-
-            else:
-                raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
-
-            return node_assigment
-
+            return  Parser().parser_assigment()
         elif (tokens.next.type == functions._Type.PRINTLN):
             tokens.select_next()
 
@@ -322,57 +328,27 @@ class Parser:
             return node_if
         elif (tokens.next.type == functions._Type.FOR):
             tokens.select_next()
+            init_state = Parser().parser_assigment()
 
-            # ---------------- Assigment block --------------
-            node_identifier = Identifier(value=tokens.next.value)
-            tokens.select_next()
-
-            if (tokens.next.type == operators._Type.EQUAL):
-
+            if(tokens.next.type == delimiters._Type.SEMICOLON):
                 tokens.select_next()
+                condition = Parser().parse_bool_expression()
 
-                bool_expression = Parser().parse_bool_expression()  # Mudo o assigment
-
-                init_state = Assigment(value=operators._Type.EQUAL)
-                init_state.add_child(node_identifier)  # Left
-                init_state.add_child(bool_expression)  # Right
-
-                # ---- DELIMITER ----
-                if(tokens.next.type == delimiters._Type.SEMICOLON):
+                if (tokens.next.type == delimiters._Type.SEMICOLON):
                     tokens.select_next()
-                    condition = Parser().parse_bool_expression()
+                    incremet = Parser().parser_assigment()
+                    block    = Parser().block()
 
-                    if (tokens.next.type == delimiters._Type.SEMICOLON):
-                        tokens.select_next()
-
-                        # --------------- ASSIGMENT --------------------
-                        node_identifier = Identifier(value=tokens.next.value)
-                        tokens.select_next()
-
-                        if (tokens.next.type == operators._Type.EQUAL):
-                            tokens.select_next()
-
-                            bool_expression = Parser().parse_bool_expression()  # Mudo o assigment
-
-                            node_incremental = Assigment(value=operators._Type.EQUAL)
-                            node_incremental.add_child(node_identifier)  # Left
-                            node_incremental.add_child(bool_expression)  # Right
-
-                            # ---------- BLOCK NODE ------------
-                            node_block_for = Block(value='BLOCK')
-
-                            # ---------------- NODE FOR --------------
-                            node_for = For(value = functions._Type.FOR)
-                            node_for.add_child(init_state)
-                            node_for.add_child(condition)
-                            node_for.add_child(node_incremental)
-                            node_for.add_child(node_block_for)
-
-                        else:
-                            raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
+                    node_for = For(value = functions._Type.FOR)
+                    node_for.add_child(init_state)
+                    node_for.add_child(condition)
+                    node_for.add_child(incremet)
+                    node_for.add_child(block)
+                    return node_for
+                else:
+                    raise InvalidToken(f"\n [STATEMENT] Expected semicolon type | Got : {tokens.next.type}")
             else:
-                raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
-
+                raise InvalidToken(f"\n [STATEMENT] Expected semicolon type | Got : {tokens.next.type}")
         else:
             raise InvalidToken(f"\n [STATEMENT] Token type recived : {tokens.next.type}")
 
