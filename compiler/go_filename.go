@@ -1,3 +1,25 @@
 Println(1)
-y = Scanln()
-Println(y)
+x = 3+6/3   *  2 -+-  +  2*4/2 + 0/1 -((6+ ((4)))/(2)) // Teste // Teste 2
+y_1 = 3
+y_1 = y_1 + 2
+z__ = x + y_1
+// Saida final
+Println(x)
+Println(z__+1)
+if x < 2 {
+    Println(1)
+}else{
+    Println(0)
+}
+
+for i = 0 ; i < 10 ; i = i + 1 {
+    Println(i)
+    if i < 5 {
+        Println(0)
+    }
+}
+
+for j = 0 ; j < 10 ; j = j + 1 {
+    y = Scanln()
+    Println(y)
+}
