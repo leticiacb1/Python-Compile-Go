@@ -376,20 +376,6 @@ class Parser:
         else:
             raise InvalidToken(f"\n [STATEMENT] Token type recived : {tokens.next.type}")
 
-    # @staticmethod
-    # def parser_block() -> Node:
-    #
-    #     node_block = Block(value='BLOCK')
-    #     tokens = Parser().tokenizer
-    #
-    #     while (tokens.next.type != "EOF"):
-    #         state = Parser().parser_statement()
-    #         node_block.add_child(state)
-    #
-    #     tokens.select_next()
-    #
-    #     return node_block
-
     @staticmethod
     def block() -> Node:
 
@@ -432,7 +418,7 @@ class Parser:
         Parser().tokenizer.select_next()
 
         # Resultado da expressão analisada
-        tree = Parser().parser_block()
+        tree = Parser().program()
 
         # Verifica se o último token é do tipo "EOF"
         if (Parser().tokenizer.next.type != "EOF"):
