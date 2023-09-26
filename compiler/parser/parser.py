@@ -75,6 +75,15 @@ class Parser:
 
             return node
 
+        elif (tokens.next.type == operators._Type.NOT):
+            node = UnOp(value=operators._Type.NOT)
+            tokens.select_next()
+            child = Parser().parser_factor()
+
+            node.add_child(child)
+
+            return node
+
         elif (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
             tokens.select_next()
             node = Parser().parse_bool_expression()

@@ -16,4 +16,7 @@ class UnOp(Node):
         if (self.value == operators._Type.MINUS):
             return (-1)*self.children[0].evaluate(symbol_table)
 
+        if (self.value == operators._Type.NOT):
+            return not self.children[0].evaluate(symbol_table)
+
         raise TypeError
