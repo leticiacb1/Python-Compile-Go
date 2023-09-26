@@ -13,4 +13,4 @@ class TokenRelational(Tokens):
             return  "({0} , 'BIGGER_THEN')".format(self.type)
 
         if (self.type == '<'):
-            return  "({0} , 'LESS THAN')".format(self.type)
+            return  "({0} , 'LESS_THAN')".format(self.type)
