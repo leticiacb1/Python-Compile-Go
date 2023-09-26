@@ -146,6 +146,39 @@ class Parser:
         return left_node
 
     @staticmethod
+    def parser_bool_term():
+        ...
+
+    @staticmethod
+    def parse_bool_expression():
+        '''
+            Analisa se a sintaxe está aderente a gramática.
+            Loop de OR.
+            Expressões binárias.
+        '''
+        tokens = Parser().tokenizer
+
+        left_node = Parser().parser_bool_term()
+
+        while (tokens.next.type == operators._Type.OR):
+
+            if (tokens.next.type == operators._Type.OR):
+                op_node = BinOp(operators._Type.OR)
+                op_node.add_child(left_node)
+
+                tokens.select_next()
+
+                right_node = Parser().parser_bool_term()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+
+            else:
+                raise InvalidToken(f"\n [BOOL EXPRESSION]Token type recived : {tokens.next.type}")
+
+        return left_node
+
+    @staticmethod
     def parser_statement():
 
         tokens = Parser().tokenizer

@@ -23,4 +23,8 @@ class BinOp(Node):
         if (self.value == operators._Type.TIMES):
             return self.children[0].evaluate(symbol_table) * self.children[1].evaluate(symbol_table)
 
+        if (self.value == operators._Type.OR):
+            return self.children[0].evaluate(symbol_table) or self.children[1].evaluate(symbol_table)
+
+
         raise TypeError
