@@ -70,3 +70,16 @@ class For(Node):
         while condition.evaluate(symbol_table):
             block.evaluate(symbol_table)
             increment.evaluate()                    # Devo setar o incremente com valor +1 ?
+
+class Scanln(Node):
+    '''
+    Função Scanln (Golang).
+    Não possui filhos.
+    '''
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def evaluate(self, symbol_table):
+        number = input()
+        return int(number)

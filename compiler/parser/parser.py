@@ -2,7 +2,7 @@ from compiler.tokenizer import Tokenizer
 from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , If , For, Block , Program)
+from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program)
 
 
 class Parser:
@@ -54,7 +54,7 @@ class Parser:
 
         elif (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
             tokens.select_next()
-            node = Parser().parse_expression()
+            node = Parser().parse_bool_expression()
 
             if (tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
                 tokens.select_next()
@@ -62,8 +62,20 @@ class Parser:
             else:
                 raise InvalidExpression(f"\n [FACTOR] Expected close parentheses type | Got {tokens.next}")
 
+        elif(tokens.next.type == functions._Type.SCANLN):
+            node = Scanln(value = functions._Type.SCANLN)
+
+            if (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+                tokens.select_next()
+                if (tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
+                    tokens.select_next()
+                    return node
+                else:
+                    raise InvalidToken(f"\n [FACTOR] Expected close parentheses type | Got {tokens.next}")
+            else:
+                raise InvalidToken(f"\n [FACTOR] Expected open parentheses type | Got {tokens.next}")
         else:
-            raise InvalidToken(f"\n [FACTOR] Token type recived : {tokens.next.type}")
+            raise InvalidToken(f"\n [FACTOR] Token type recived : {tokens.next}")
 
     @staticmethod
     def parser_term() -> Node:
