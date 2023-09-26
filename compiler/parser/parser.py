@@ -2,7 +2,7 @@ from compiler.tokenizer import Tokenizer
 from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println, Block , Program)
+from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , If, Block , Program)
 
 
 class Parser:
@@ -162,11 +162,11 @@ class Parser:
 
                 tokens.select_next()
 
-                expression = Parser().parse_expression()
+                bool_expression = Parser().parse_bool_expression() # Mudo o assigment
 
                 node_assigment = Assigment(value=operators._Type.EQUAL)
                 node_assigment.add_child(node_identifier)  # Left
-                node_assigment.add_child(expression)  # Right
+                node_assigment.add_child(bool_expression)  # Right
 
             else:
                 raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
@@ -179,10 +179,10 @@ class Parser:
             if (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
                 tokens.select_next()
 
-                expression = Parser().parse_expression()
+                bool_expression = Parser().parse_bool_expression() # bool_expression ?
 
                 node_println = Println(value=functions._Type.PRINTLN)
-                node_println.add_child(expression)
+                node_println.add_child(bool_expression)
 
                 if (tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
                     raise InvalidExpression(f"\n [STATEMENT] Expected close parentheses type | Got {tokens.next}")
@@ -191,22 +191,39 @@ class Parser:
             else:
                 raise InvalidExpression(f"\n [STATEMENT] Expected open parentheses type | Got {tokens.next}")
 
+        elif(tokens.next.type == functions._Type.IF):
+            tokens.select_next()
+
+            bool_expression = Parser().parse_bool_expression() # bool_expression ?
+            block_if        = Parser().block()                 # Sem select next entre os dois?
+
+            if(tokens.next.type == functions._Type.ELSE): # Bloco else : 3 filhos
+                tokens.select_next()
+                block_else = Parser().block()
+
+            # Nó do tipo if :
+            node_if = If(value=functions._Type.IF)
+            node_if.add_child(bool_expression)
+            node_if.add_child(block_if)
+            node_if.add_child(block_else)
+
+            return node_if
         else:
             raise InvalidToken(f"\n [STATEMENT] Token type recived : {tokens.next.type}")
 
-    @staticmethod
-    def parser_block() -> Node:
-
-        node_block = Block(value='BLOCK')
-        tokens = Parser().tokenizer
-
-        while (tokens.next.type != "EOF"):
-            state = Parser().parser_statement()
-            node_block.add_child(state)
-
-        tokens.select_next()
-
-        return node_block
+    # @staticmethod
+    # def parser_block() -> Node:
+    #
+    #     node_block = Block(value='BLOCK')
+    #     tokens = Parser().tokenizer
+    #
+    #     while (tokens.next.type != "EOF"):
+    #         state = Parser().parser_statement()
+    #         node_block.add_child(state)
+    #
+    #     tokens.select_next()
+    #
+    #     return node_block
 
     @staticmethod
     def block() -> Node:
