@@ -309,15 +309,15 @@ class Parser:
             bool_expression = Parser().parse_bool_expression() # bool_expression ?
             block_if        = Parser().block()                 # Sem select next entre os dois?
 
-            if(tokens.next.type == functions._Type.ELSE): # Bloco else : 3 filhos
-                tokens.select_next()
-                block_else = Parser().block()
-
             # Nó do tipo if :
             node_if = If(value=functions._Type.IF)
             node_if.add_child(bool_expression)
             node_if.add_child(block_if)
-            node_if.add_child(block_else)
+
+            if(tokens.next.type == functions._Type.ELSE): # Bloco else : 3 filhos
+                tokens.select_next()
+                block_else = Parser().block()
+                node_if.add_child(block_else)
 
             return node_if
         elif (tokens.next.type == functions._Type.FOR):
@@ -391,7 +391,7 @@ class Parser:
                 while(tokens.next.type != delimiters._Type.CLOSE_KEY):
                     state = Parser().parser_statement()
                     node_block.add_child(state)
-
+                tokens.select_next() # Consome o parênteses
                 return node_block
             else:
                 raise InvalidExpression(f"\n [BLOCK] Expected END OF LINE type | Got {tokens.next}")
