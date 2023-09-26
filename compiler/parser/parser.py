@@ -106,7 +106,7 @@ class Parser:
         return left_node
 
     @staticmethod
-    def parse_expression():
+    def parser_expression():
         '''
             Analisa se a sintaxe está aderente a gramática.
             Loops de soma e subtração.
@@ -144,6 +144,53 @@ class Parser:
                 raise InvalidToken(f"\n [EXPRESSION]Token type recived : {tokens.next.type}")
 
         return left_node
+
+    @staticmethod
+    def parser_rl_expressions():
+        tokens = Parser().tokenizer
+
+        left_node = Parser().parser_expression()
+
+        while (tokens.next.type in [operators._Type.BIGGER_THEN, operators._Type.EQUAL_COMP , operators._Type.LESS_THAN]):
+
+            if (tokens.next.type == operators._Type.BIGGER_THEN):
+                op_node = BinOp(operators._Type.BIGGER_THEN)
+                op_node.add_child(left_node)
+
+                tokens.select_next()
+
+                right_node = Parser().parser_expression()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+
+            elif (tokens.next.type == operators._Type.LESS_THAN):
+                op_node = BinOp(operators._Type.LESS_THAN)
+                op_node.add_child(left_node)
+
+                tokens.select_next()
+
+                right_node = Parser().parser_expression()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+
+            elif (tokens.next.type == operators._Type.EQUAL_COMP):
+                op_node = BinOp(operators._Type.EQUAL_COMP)
+                op_node.add_child(left_node)
+
+                tokens.select_next()
+
+                right_node = Parser().parser_expression()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+
+            else:
+                raise InvalidToken(f"\n [EXPRESSION]Token type recived : {tokens.next.type}")
+
+        return left_node
+
 
     @staticmethod
     def parser_bool_term():

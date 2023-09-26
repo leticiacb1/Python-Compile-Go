@@ -29,5 +29,13 @@ class BinOp(Node):
         if (self.value == operators._Type.AND):
             return self.children[0].evaluate(symbol_table) and self.children[1].evaluate(symbol_table)
 
+        if (self.value == operators._Type.BIGGER_THEN):
+            return self.children[0].evaluate(symbol_table) > self.children[1].evaluate(symbol_table)
+
+        if (self.value == operators._Type.LESS_THAN):
+            return self.children[0].evaluate(symbol_table) < self.children[1].evaluate(symbol_table)
+
+        if (self.value == operators._Type.EQUAL_COMP):
+            return self.children[0].evaluate(symbol_table) == self.children[1].evaluate(symbol_table)
 
         raise TypeError
