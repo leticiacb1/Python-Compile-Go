@@ -8,7 +8,9 @@ class _Type:
     BIGGER_THEN  = '>'
     LESS_THAN    = '<'
     AND          = '&&'
+    E            = '&'
     OR           = '||'
+    O            = '|'
     NOT          = '!'
 
 class _Value:

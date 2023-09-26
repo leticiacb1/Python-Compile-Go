@@ -34,6 +34,7 @@ class Tokenizer:
                 break
 
             else:
+                #print(f"----- valor : {self.source[self.position]}")
                 if(self.source[self.position].isdigit()):
                     value_str = ''
 
@@ -85,14 +86,16 @@ class Tokenizer:
                     self.next = TokenOperator(type=operators._Type.NOT, value=operators._Value.NOT)
                     self.position += 1
                     break
-                elif (self.source[self.position] == operators._Type.AND):
-                    self.next = TokenOperator(type=operators._Type.AND, value=operators._Value.AND)
-                    self.position += 1
+                elif ( (self.source[self.position] == operators._Type.E) and (self.source[self.position+1] == operators._Type.E)):
+                    self.position += 2
+                    self.next = TokenRelational(type=operators._Type.AND, value=operators._Value.AND)
                     break
-                elif (self.source[self.position] == operators._Type.OR):
+
+                elif ((self.source[self.position] == operators._Type.O) and (self.source[self.position+1] == operators._Type.O)):
+                    self.position += 2
                     self.next = TokenOperator(type=operators._Type.OR, value=operators._Value.OR)
-                    self.position += 1
                     break
+
                 elif(self.source[self.position] == delimiters._Type.OPEN_PARENTHESES):
                     self.next = TokenDelimiter(type = delimiters._Type.OPEN_PARENTHESES , value = delimiters._Value.PARENTHESES)
                     self.position +=1
