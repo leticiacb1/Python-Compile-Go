@@ -46,3 +46,27 @@ class If(Node):
 
             if (not conditional.evaluate(symbol_table)):
                 self.children[2].evaluate(symbol_table)
+
+class For(Node):
+    '''
+    Função for (Golang).
+    Possui 4 filhos.
+
+                 ________ For ________________
+               /          |           \       \
+    Init state     condition      increment    block
+    '''
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def evaluate(self, symbol_table):
+
+        init_state = self.children[0].evaluate(symbol_table)
+        condition  = self.children[1]
+        increment  = self.children[2]
+        block      = self.children[3]
+
+        while condition.evaluate(symbol_table):
+            block.evaluate(symbol_table)
+            increment.evaluate()                    # Devo setar o incremente com valor +1 ? 

@@ -208,6 +208,59 @@ class Parser:
             node_if.add_child(block_else)
 
             return node_if
+        elif (tokens.next.type == functions._Type.FOR):
+            tokens.select_next()
+
+            # ---------------- Assigment block --------------
+            node_identifier = Identifier(value=tokens.next.value)
+            tokens.select_next()
+
+            if (tokens.next.type == operators._Type.EQUAL):
+
+                tokens.select_next()
+
+                bool_expression = Parser().parse_bool_expression()  # Mudo o assigment
+
+                init_state = Assigment(value=operators._Type.EQUAL)
+                init_state.add_child(node_identifier)  # Left
+                init_state.add_child(bool_expression)  # Right
+
+                # ---- DELIMITER ----
+                if(tokens.next.type == delimiters._Type.SEMICOLON):
+                    tokens.select_next()
+                    condition = Parser().parse_bool_expression()
+
+                    if (tokens.next.type == delimiters._Type.SEMICOLON):
+                        tokens.select_next()
+
+                        # --------------- ASSIGMENT --------------------
+                        node_identifier = Identifier(value=tokens.next.value)
+                        tokens.select_next()
+
+                        if (tokens.next.type == operators._Type.EQUAL):
+                            tokens.select_next()
+
+                            bool_expression = Parser().parse_bool_expression()  # Mudo o assigment
+
+                            node_incremental = Assigment(value=operators._Type.EQUAL)
+                            node_incremental.add_child(node_identifier)  # Left
+                            node_incremental.add_child(bool_expression)  # Right
+
+                            # ---------- BLOCK NODE ------------
+                            node_block_for = Block(value='BLOCK')
+
+                            # ---------------- NODE FOR --------------
+                            node_for = For(value = functions._Type.FOR)
+                            node_for.add_child(init_state)
+                            node_for.add_child(condition)
+                            node_for.add_child(node_incremental)
+                            node_for.add_child(node_block_for)
+
+                        else:
+                            raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
+            else:
+                raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
+
         else:
             raise InvalidToken(f"\n [STATEMENT] Token type recived : {tokens.next.type}")
 
