@@ -3,7 +3,7 @@ from parser import Parser
 from prepro import PrePro
 from table.symbol_table import SymbolTable
 
-def load_file(filename):
+def load_file(filename) -> list[str]:
     with open(filename, "r") as f:
         lines = f.readlines()
     return lines

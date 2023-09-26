@@ -118,7 +118,7 @@ class Parser:
         return left_node
 
     @staticmethod
-    def parser_expression():
+    def parser_expression() -> Node:
         '''
             Analisa se a sintaxe está aderente a gramática.
             Loops de soma e subtração.
@@ -158,7 +158,7 @@ class Parser:
         return left_node
 
     @staticmethod
-    def parser_rl_expressions():
+    def parser_rl_expressions() -> Node:
         tokens = Parser().tokenizer
 
         left_node = Parser().parser_expression()
@@ -205,7 +205,7 @@ class Parser:
 
 
     @staticmethod
-    def parser_bool_term():
+    def parser_bool_term() -> Node:
         tokens = Parser().tokenizer
 
         left_node = Parser().parser_rl_expressions()
@@ -229,7 +229,7 @@ class Parser:
         return left_node
 
     @staticmethod
-    def parse_bool_expression():
+    def parse_bool_expression() -> Node:
         '''
             Analisa se a sintaxe está aderente a gramática.
             Loop de OR.
@@ -258,7 +258,7 @@ class Parser:
         return left_node
 
     @staticmethod
-    def parser_statement():
+    def parser_statement() -> Node:
 
         tokens = Parser().tokenizer
 

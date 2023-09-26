@@ -15,7 +15,7 @@ class Assigment(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table):
+    def evaluate(self, symbol_table) -> None:
         
         # Valor do filho da direita
         result = self.children[1].evaluate(symbol_table)

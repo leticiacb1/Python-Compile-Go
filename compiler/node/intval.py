@@ -8,5 +8,5 @@ class IntVal(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table):
+    def evaluate(self, symbol_table) -> int:
         return self.value

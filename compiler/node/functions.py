@@ -17,7 +17,7 @@ class Println(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table):
+    def evaluate(self, symbol_table) -> None:
         expression_result = self.children[0].evaluate(symbol_table)
         print(expression_result)
 
@@ -34,7 +34,7 @@ class If(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table):
+    def evaluate(self, symbol_table) -> None:
 
         conditional = self.children[0]
         block_if    = self.children[1]
@@ -60,7 +60,7 @@ class For(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table):
+    def evaluate(self, symbol_table) -> None:
 
         init_state = self.children[0].evaluate(symbol_table)
         condition  = self.children[1]
@@ -80,6 +80,6 @@ class Scanln(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table):
+    def evaluate(self, symbol_table) -> int:
         number = input()
         return int(number)

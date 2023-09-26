@@ -20,7 +20,7 @@ class Tokenizer:
             'else': {'type': functions._Type.ELSE, 'value': functions._Value.ELSE}
         }
 
-    def select_next(self):
+    def select_next(self) -> None:
         '''
             Atualiza a variável next com o próximo token passado
         '''

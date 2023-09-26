@@ -5,7 +5,7 @@ class TokenDelimiter(Tokens):
     def __init__ (self, type : str , value : int):
         super().__init__(type, value)
 
-    def __str__(self):
+    def __str__(self) -> str:
         if (self.type == '('):
             return  "({0} , 'OPEN_PARENTHESES')".format(self.type)  
         if (self.type == ')'):

@@ -14,6 +14,6 @@ statement   statement          statement
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self , symbol_table):
+    def evaluate(self , symbol_table) -> None:
         for child in self.children:
             child.evaluate(symbol_table)
