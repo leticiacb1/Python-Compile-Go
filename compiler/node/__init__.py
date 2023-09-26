@@ -7,3 +7,4 @@ from .block      import Block
 from .assigment  import Assigment
 from .functions  import Println
 from .identifier import Identifier
+from .program    import Program

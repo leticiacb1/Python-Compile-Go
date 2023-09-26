@@ -2,7 +2,7 @@ from compiler.tokenizer import Tokenizer
 from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println, Block)
+from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println, Block , Program)
 
 
 class Parser:
@@ -207,6 +207,26 @@ class Parser:
         tokens.select_next()
 
         return node_block
+
+    @staticmethod
+    def block() -> Node:
+
+        node_block = Block(value='BLOCK')
+        ...
+
+    @staticmethod
+    def program() -> Node:
+
+        node_program = Program(value='PROGRAM')
+        tokens = Parser().tokenizer
+
+        while (tokens.next.type != "EOF"):
+            state = Parser().parser_statement()
+            node_program.add_child(state)
+
+        tokens.select_next()
+
+        return node_program
 
     @staticmethod
     def run(code):
