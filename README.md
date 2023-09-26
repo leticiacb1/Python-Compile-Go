@@ -3,7 +3,7 @@ Compilador desenvolvido na disciplina de Lógica da Computação , 7° Semestre 
 
 ### Diagram ⚠️
 
-<img src = 'Diagrama_v2-1.png'>
+<img src = 'Diagrama_v2-2.png'>
 
 ### EBNF
 
