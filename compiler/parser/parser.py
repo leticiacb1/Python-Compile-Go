@@ -212,7 +212,21 @@ class Parser:
     def block() -> Node:
 
         node_block = Block(value='BLOCK')
-        ...
+        tokens = Parser().tokenizer
+
+        if (tokens.next.type == delimiters._Type.OPEN_KEY):
+            tokens.select_next()
+
+            if (tokens.next.type == delimiters._Type.END_OF_LINE):
+                tokens.select_next()
+
+                while(tokens.next.type != delimiters._Type.CLOSE_KEY):
+                    state = Parser().parser_statement()
+                    node_block.add_child(state)
+
+                return node_block
+            else:
+                raise InvalidExpression(f"\n [BLOCK] Expected END OF LINE type | Got {tokens.next}")
 
     @staticmethod
     def program() -> Node:
