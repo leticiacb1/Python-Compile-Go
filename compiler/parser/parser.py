@@ -390,6 +390,13 @@ class Parser:
 
         while (tokens.next.type != "EOF"):
             state = Parser().parser_statement()
+
+            # Consumo um \n no final
+            if (tokens.next.type == delimiters._Type.END_OF_LINE):
+                tokens.select_next()
+            else:
+                raise InvalidExpression(f"\n [PROGRAM] Expected END OF LINE type | Got {tokens.next}")
+
             node_program.add_child(state)
 
         tokens.select_next()

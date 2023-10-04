@@ -8,6 +8,11 @@ class PrePro:
     @staticmethod
     def filter(code: str) -> str:
         code = re.sub(r"\s*//.*", "", code)
+
+        if (len(code) == 1):
+            # Linha apenas com apenas \n pós substituição
+            return ''
+
         return code
 
     @staticmethod
@@ -15,5 +20,5 @@ class PrePro:
         code = ''
         for line in lines_code:
             code += PrePro().filter(line)
-        
-        return code 
+
+        return code
