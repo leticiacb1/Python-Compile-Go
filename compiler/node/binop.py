@@ -18,7 +18,7 @@ class BinOp(Node):
             value2 , type2 =  self.children[1].evaluate(symbol_table)
 
             if( (type1 == types.INT) and (type2 == types.INT) ):
-                return value1 + value2, types.INT
+                return value1 + value2, types.TYPE_INT
 
             raise TypeError
 
@@ -27,7 +27,7 @@ class BinOp(Node):
             value2 , type2 = self.children[1].evaluate(symbol_table)
 
             if ((type1 == types.INT) and (type2 == types.INT)):
-                return value1 - value2, types.INT
+                return value1 - value2, types.TYPE_INT
 
             raise TypeError
 
@@ -36,7 +36,7 @@ class BinOp(Node):
             value2, type2 = self.children[1].evaluate(symbol_table)
 
             if ((type1 == types.INT) and (type2 == types.INT)):
-                return value1//value2, types.INT
+                return value1//value2, types.TYPE_INT
 
             raise TypeError
 
@@ -45,7 +45,7 @@ class BinOp(Node):
             value2, type2 = self.children[1].evaluate(symbol_table)
 
             if ((type1 == types.INT) and (type2 == types.INT)):
-                return value1 * value2, types.INT
+                return value1 * value2, types.TYPE_INT
 
             raise TypeError
 
@@ -55,8 +55,8 @@ class BinOp(Node):
 
             if ((type1 == types.INT) and (type2 == types.INT)):
                 if(value1 or value2):   # Booleanos nao inteiros agora:
-                    return 1, types.INT
-                return 0, types.INT
+                    return 1, types.TYPE_INT
+                return 0, types.TYPE_INT
 
             raise TypeError
 
@@ -66,8 +66,8 @@ class BinOp(Node):
 
             if ((type1 == types.INT) and (type2 == types.INT)):
                 if(value1 and value2):   # Booleanos nao inteiros agora:
-                    return 1, types.INT
-                return 0, types.INT
+                    return 1, types.TYPE_INT
+                return 0, types.TYPE_INT
 
             raise TypeError
 
@@ -77,8 +77,8 @@ class BinOp(Node):
 
             if ((type1 == types.INT) and (type2 == types.INT)):
                 if(value1 > value2):   # Booleanos nao inteiros agora:
-                    return 1, types.INT
-                return 0, types.INT
+                    return 1, types.TYPE_INT
+                return 0, types.TYPE_INT
 
             raise TypeError
 
@@ -88,22 +88,26 @@ class BinOp(Node):
 
             if ((type1 == types.INT) and (type2 == types.INT)):
                 if (value1 < value2):  # Booleanos nao inteiros agora:
-                    return 1, types.INT
-                return 0, types.INT
+                    return 1, types.TYPE_INT
+                return 0, types.TYPE_INT
 
             raise TypeError
 
         if (self.value == operators._Type.EQUAL_COMP):
-            valor = self.children[0].evaluate(symbol_table) == self.children[1].evaluate(symbol_table)
-
             value1, type1 = self.children[0].evaluate(symbol_table)
             value2, type2 = self.children[1].evaluate(symbol_table)
 
             if ((type1 == types.INT) and (type2 == types.INT)):
                 if (value1 == value2):  # Booleanos nao inteiros agora:
-                    return 1, types.INT
-                return 0, types.INT
+                    return 1, types.TYPE_INT
+                return 0, types.TYPE_INT
 
             raise TypeError
+
+        if(self.value == operators._Type.CONCAT):
+            value1, type1 = self.children[0].evaluate(symbol_table)
+            value2, type2 = self.children[1].evaluate(symbol_table)
+
+            return str(value1) + str(value2) , types.TYPE_STR
 
         raise TypeError

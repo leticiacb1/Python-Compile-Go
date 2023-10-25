@@ -82,10 +82,10 @@ class Scanln(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> (int, str):
-        number_or_str = input()
+        number = input()
 
-        # Número ou string
-        if(number_or_str.isdigit()):
-            return int(number_or_str), types.INT
+        # Número
+        if(number.isdigit()):
+            return int(number), types.TYPE_INT
 
-        return str(number_or_str), types.STR
+        raise TypeError

@@ -133,14 +133,12 @@ class Tokenizer:
                     # Identificando strings -> FORMATO : "Algo aqui"
 
                     value_str = ''
+                    self.position += 1
                     while(self.source[self.position] != delimiters._Type.QUOTATION_MARKS):
                         value_str += self.source[self.position]
                         self.position += 1
 
-                    # Fecha string:
-                    value_str += self.source[self.position]
                     self.position += 1
-
                     self.next = TokenText(type = "TEXT" , value = 0)
 
                 elif(self.source[self.position].isalpha()):

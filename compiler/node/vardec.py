@@ -24,7 +24,7 @@ identifier      Caso possua BoolExpression
         if(len(self.children) == 1):
             identifier , _type = self.children[0].evaluate()
             symbol_table.create(identifier , _type)
-        else:
+        elif(len(self.children) == 2):
             # Possui dois filhos
             identifier, _type1 = self.children[0].evaluate()
             boolExpression, _type2 = self.children[0].evaluate()
@@ -32,4 +32,7 @@ identifier      Caso possua BoolExpression
             if(_type1 == _type2):
                 symbol_table.create(identifier, _type1)
                 symbol_table.setter(identifier, boolExpression)
-        raise TypeError
+            else:
+                raise TypeError
+        else:
+            raise TypeError
