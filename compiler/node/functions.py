@@ -1,4 +1,5 @@
 from .node import Node
+from compiler.constants import types
 
 class Println(Node):
     '''
@@ -80,6 +81,11 @@ class Scanln(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table) -> int:
-        number = input()
-        return int(number)
+    def evaluate(self, symbol_table) -> (int, str):
+        number_or_str = input()
+
+        # Número ou string
+        if(number_or_str.isdigit()):
+            return int(number_or_str), types.INT
+
+        return str(number_or_str), types.STR

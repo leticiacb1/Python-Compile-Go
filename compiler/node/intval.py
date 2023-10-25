@@ -1,4 +1,5 @@
 from .node import Node
+from compiler.constants import types
 
 class IntVal(Node):
     '''
@@ -8,5 +9,5 @@ class IntVal(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table) -> int:
-        return self.value
+    def evaluate(self, symbol_table) -> (int, str):
+        return self.value, types.INT

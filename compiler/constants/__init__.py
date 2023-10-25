@@ -5,3 +5,4 @@ from .eof import *
 from .delimiters import *
 from .functions import *
 from .identifier import *
+from .types import *
