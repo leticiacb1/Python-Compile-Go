@@ -12,6 +12,7 @@ class _Type:
     OR           = '||'
     O            = '|'
     NOT          = '!'
+    CONCAT       = '.'
 
 class _Value:
     PLUS         = 1
@@ -25,3 +26,4 @@ class _Value:
     AND          = 9
     OR           = 10
     NOT          = 11
+    CONCAT       = 12

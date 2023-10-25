@@ -1,6 +1,6 @@
 import re
-from compiler.constants import delimiters, eof, invalid, number , operators , functions , identifier
-from compiler.tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier , TokenRelational
+from compiler.constants import delimiters, eof, invalid, number , operators , functions , identifier , types
+from compiler.tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier , TokenRelational, TokenText
 
 class Tokenizer:
     '''
@@ -17,7 +17,10 @@ class Tokenizer:
             'Scanln': {'type': functions._Type.SCANLN, 'value': functions._Value.SCANLN},
             'for':  {'type': functions._Type.FOR, 'value': functions._Value.FOR},
             'if': {'type': functions._Type.IF, 'value': functions._Value.IF},
-            'else': {'type': functions._Type.ELSE, 'value': functions._Value.ELSE}
+            'else': {'type': functions._Type.ELSE, 'value': functions._Value.ELSE},
+            'var': {'type': functions._Type.VAR , 'value': functions._Value.VAR },
+            'int': {'type': types.TYPE_INT, 'value': 0},
+            'string': {'type': types.TYPE_STR, 'value': 0}
         }
 
     def select_next(self) -> None:
@@ -34,7 +37,6 @@ class Tokenizer:
                 break
 
             else:
-                #print(f"----- valor : {self.source[self.position]}")
                 if(self.source[self.position].isdigit()):
                     value_str = ''
 
@@ -96,6 +98,11 @@ class Tokenizer:
                     self.next = TokenOperator(type=operators._Type.OR, value=operators._Value.OR)
                     break
 
+                elif(self.source[self.position] == operators._Type.CONCAT):
+                    self.next = TokenOperator(type=operators._Type.CONCAT, value=operators._Value.CONCAT)
+                    self.position += 1
+                    break
+
                 elif(self.source[self.position] == delimiters._Type.OPEN_PARENTHESES):
                     self.next = TokenDelimiter(type = delimiters._Type.OPEN_PARENTHESES , value = delimiters._Value.PARENTHESES)
                     self.position +=1
@@ -122,6 +129,20 @@ class Tokenizer:
                     self.next = TokenDelimiter(type=delimiters._Type.SEMICOLON, value=delimiters._Value.SEMICOLON)
                     self.position += 1
                     break
+                elif(self.source[self.position] == delimiters._Type.QUOTATION_MARKS):
+                    # Identificando strings -> FORMATO : "Algo aqui"
+
+                    value_str = ''
+                    while(self.source[self.position] != delimiters._Type.QUOTATION_MARKS):
+                        value_str += self.source[self.position]
+                        self.position += 1
+
+                    # Fecha string:
+                    value_str += self.source[self.position]
+                    self.position += 1
+
+                    self.next = TokenText(type = "TEXT" , value = 0)
+
                 elif(self.source[self.position].isalpha()):
                     # Pode ser uma palavra reservada ou um caracter
                     value_str = ''

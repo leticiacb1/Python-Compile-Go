@@ -1,2 +1,2 @@
-INT = "INT"
-STR = "STRING"
+TYPE_INT = "INT"
+TYPE_STR = "STRING"
