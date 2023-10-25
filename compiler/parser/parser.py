@@ -1,8 +1,8 @@
 from compiler.tokenizer import Tokenizer
-from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier
+from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier , text
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program)
+from compiler.node import (IntVal , StrVal , VarDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program)
 
 
 class Parser:
@@ -45,6 +45,12 @@ class Parser:
         if (tokens.next.type == number._Type.INT):
 
             node = IntVal(value=tokens.next.value)
+            tokens.select_next()
+
+            return node
+
+        elif (tokens.next.type == text._Type.STR):
+            node = StrVal(value=tokens.next.value)
             tokens.select_next()
 
             return node
@@ -176,6 +182,17 @@ class Parser:
 
             elif (tokens.next.type == operators._Type.MINUS):
                 op_node = BinOp(operators._Type.MINUS)
+                op_node.add_child(left_node)
+
+                tokens.select_next()
+
+                right_node = Parser().parser_term()
+                op_node.add_child(right_node)
+
+                left_node = op_node
+
+            elif (tokens.next.type == operators._Type.CONCAT):
+                op_node = BinOp(operators._Type.CONCAT)
                 op_node.add_child(left_node)
 
                 tokens.select_next()
@@ -359,6 +376,35 @@ class Parser:
                     raise InvalidToken(f"\n [STATEMENT] Expected semicolon type | Got : {tokens.next.type}")
             else:
                 raise InvalidToken(f"\n [STATEMENT] Expected semicolon type | Got : {tokens.next.type}")
+        elif (tokens.next.type == functions._Type.VAR):
+            # Var | identifier | type | = BExpression
+
+            tokens.select_next()
+            var_dec_node = VarDec(value = functions._Type.VAR)
+
+            if (tokens.next.type == identifier._Type.IDENTIFIER):
+                tokens.select_next()
+                identifier = Identifier(value = tokens.next.value)
+
+
+                # --------- Implementar (type): ---------
+                if (tokens.next.type == var._Type.TYPE):
+                    tokens.select_next()
+
+                    # Add children
+                    var_dec_node.add_child(identifier)
+
+                    # Caso tenha = :
+                    if (tokens.next.type == operators._Type.EQUAL):
+                        bool_expression = Parser().parse_bool_expression()
+                        var_dec_node.add_child(bool_expression)
+
+                    return var_dec_node
+                else:
+                    raise InvalidExpression(f"\n [STATEMENT] Expected 'type' type | Got {tokens.next}")
+            else:
+                raise InvalidExpression(f"\n [STATEMENT] Expected identifier type | Got {tokens.next}")
+
         else:
             raise InvalidToken(f"\n [STATEMENT] Token type recived : {tokens.next.type}")
 

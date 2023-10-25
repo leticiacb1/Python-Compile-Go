@@ -1,5 +1,6 @@
 from .operators import *
 from .number import *
+from .text import *
 from .invalid import *
 from .eof import *
 from .delimiters import *

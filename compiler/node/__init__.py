@@ -9,3 +9,4 @@ from .assigment  import Assigment
 from .functions  import Println , If , For , Scanln
 from .identifier import Identifier
 from .program    import Program
+from .vardec     import VarDec

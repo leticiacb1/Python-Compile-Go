@@ -2,7 +2,7 @@ from .node import Node
 from compiler.constants import operators
 from compiler.constants import types
 
-class UnOp(Node):
+class VarDec(Node):
     '''
         Pode ter 1 ou 2 filhos:
 
