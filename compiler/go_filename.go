@@ -62,3 +62,8 @@ Println(a.(x_1==1))
 Println(a == a)
 Println(a < b)
 Println(a > b)
+
+//teste2 -  Tem que quebrar
+
+// var x_3 string
+// x_3 = Scanln()
