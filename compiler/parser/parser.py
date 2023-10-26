@@ -1,5 +1,5 @@
 from compiler.tokenizer import Tokenizer
-from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier , text
+from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier , text , types
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
 from compiler.node import (IntVal , StrVal , VarDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program)
@@ -49,7 +49,7 @@ class Parser:
 
             return node
 
-        elif (tokens.next.type == text._Type.STR):
+        elif (tokens.next.type == text._Type.VARIABLE_STR):
             node = StrVal(value=tokens.next.value)
             tokens.select_next()
 
@@ -167,7 +167,7 @@ class Parser:
 
         left_node = Parser().parser_term()
 
-        while (tokens.next.type in [operators._Type.PLUS, operators._Type.MINUS]):
+        while (tokens.next.type in [operators._Type.PLUS, operators._Type.MINUS, operators._Type.CONCAT]):
 
             if (tokens.next.type == operators._Type.PLUS):
                 op_node = BinOp(operators._Type.PLUS)
@@ -378,24 +378,25 @@ class Parser:
                 raise InvalidToken(f"\n [STATEMENT] Expected semicolon type | Got : {tokens.next.type}")
         elif (tokens.next.type == functions._Type.VAR):
             # Var | identifier | type | = BExpression
-
             tokens.select_next()
-            var_dec_node = VarDec(value = functions._Type.VAR)
 
             if (tokens.next.type == identifier._Type.IDENTIFIER):
+
+                node_identifier = Identifier(value=tokens.next.value)
                 tokens.select_next()
-                identifier = Identifier(value = tokens.next.value)
 
-
-                # --------- Implementar (type): ---------
-                if (tokens.next.type == var._Type.TYPE):
-                    tokens.select_next()
+                # --------- Type ---------
+                if (tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
+                    _type = tokens.next.type
 
                     # Add children
-                    var_dec_node.add_child(identifier)
+                    var_dec_node = VarDec(value=_type)
+                    var_dec_node.add_child(node_identifier)
 
-                    # Caso tenha = :
+                    # Caso tenha 2° filho:
+                    tokens.select_next()
                     if (tokens.next.type == operators._Type.EQUAL):
+                        tokens.select_next()
                         bool_expression = Parser().parse_bool_expression()
                         var_dec_node.add_child(bool_expression)
 

@@ -1,5 +1,5 @@
 import re
-from compiler.constants import delimiters, eof, invalid, number , operators , functions , identifier , types
+from compiler.constants import delimiters, eof, invalid, number , operators , functions , identifier , types, text
 from compiler.tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier , TokenRelational, TokenText
 
 class Tokenizer:
@@ -130,7 +130,6 @@ class Tokenizer:
                     self.position += 1
                     break
                 elif(self.source[self.position] == delimiters._Type.QUOTATION_MARKS):
-                    # Identificando strings -> FORMATO : "Algo aqui"
 
                     value_str = ''
                     self.position += 1
@@ -139,8 +138,9 @@ class Tokenizer:
                         self.position += 1
 
                     self.position += 1
-                    self.next = TokenText(type = "TEXT" , value = 0)
+                    self.next = TokenText(type= text._Type.VARIABLE_STR , value= value_str)
 
+                    break
                 elif(self.source[self.position].isalpha()):
                     # Pode ser uma palavra reservada ou um caracter
                     value_str = ''

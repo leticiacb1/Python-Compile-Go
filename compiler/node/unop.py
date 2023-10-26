@@ -1,6 +1,7 @@
 from .node import Node
 from compiler.constants import operators
 from compiler.constants import types
+from compiler.errors.operators import InvalidOperators
 
 class UnOp(Node):
     '''
@@ -22,8 +23,6 @@ class UnOp(Node):
         if (self.value == operators._Type.NOT):
             valor, _type = self.children[0].evaluate(symbol_table)  # Booleanos devem virar 0 ou 1
 
-             # if (valor): return 0, _type
-             # else : return 1, _type
             return not valor, _type
 
-        raise TypeError
+        raise InvalidOperators(f" [UnOp - Evaluate] Invalid operator type = {self.value}")

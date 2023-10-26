@@ -1,4 +1,5 @@
 from .node import Node
+from compiler.errors.types import IncompatibleTypes
 
 class Assigment(Node):
     '''
@@ -16,19 +17,12 @@ class Assigment(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> None:
-        
-        # Valor do filho da direita
-        result = self.children[1].evaluate(symbol_table)
-        symbol_table.setter(self.children[0].value, result)
 
-        # Expression or a value
-        result, type1 = self.children[1].evaluate(symbol_table)
-
-        # Type of de identifier
-        identifier, type2 = symbol_table.getter(self.children[0].value)
+        identifier, type1 = symbol_table.getter(self.children[0].value)
+        result_expression, type2 = self.children[1].evaluate(symbol_table)
 
         # It is only possible to set the value if it were of the same type
-        if(type1 == type2):
-            symbol_table.setter(self.children[0].value, result)
+        if (type1 == type2):
+            symbol_table.setter(self.children[0].value, result_expression)
         else:
-            raise TypeError
+            raise IncompatibleTypes(f" [ASSIGMENT - EVALUATE] Setting a value type [{type2}] inconsistent with the variable type [{type1}]")

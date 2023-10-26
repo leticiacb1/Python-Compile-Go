@@ -1,5 +1,6 @@
 from .node import Node
 from compiler.constants import types
+from compiler.errors.types import InvalidType
 
 class Println(Node):
     '''
@@ -19,7 +20,7 @@ class Println(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> None:
-        expression_result = self.children[0].evaluate(symbol_table)
+        expression_result , _type = self.children[0].evaluate(symbol_table)
         print(expression_result)
 
 class If(Node):
@@ -63,18 +64,21 @@ class For(Node):
 
     def evaluate(self, symbol_table) -> None:
 
-        init_state = self.children[0].evaluate(symbol_table)
+        self.children[0].evaluate(symbol_table)
         condition  = self.children[1]
         increment  = self.children[2]
         block      = self.children[3]
 
-        while condition.evaluate(symbol_table):
+        value, type = condition.evaluate(symbol_table)
+        while value:
             block.evaluate(symbol_table)
             increment.evaluate(symbol_table)
 
+            value, type = condition.evaluate(symbol_table)
+
 class Scanln(Node):
     '''
-    Função Scanln (Golang).
+    Função Scanln (Golan
     Não possui filhos.
     '''
 
@@ -88,4 +92,4 @@ class Scanln(Node):
         if(number.isdigit()):
             return int(number), types.TYPE_INT
 
-        raise TypeError
+        raise InvalidType(f" [SCANLN - EVALUATE] Only the integer type is accepted in the Scanln function. Tried type: {type(number)}")

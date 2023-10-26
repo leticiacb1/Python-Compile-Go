@@ -1,6 +1,5 @@
 from .node import Node
-from compiler.constants import operators
-from compiler.constants import types
+from compiler.errors.types import IncompatibleTypes
 
 class VarDec(Node):
     '''
@@ -20,19 +19,13 @@ identifier      Caso possua BoolExpression
 
     def evaluate(self, symbol_table) -> (int, str):
 
-        # Possui apenas um filho
-        if(len(self.children) == 1):
-            identifier , _type = self.children[0].evaluate()
-            symbol_table.create(identifier , _type)
-        elif(len(self.children) == 2):
-            # Possui dois filhos
-            identifier, _type1 = self.children[0].evaluate()
-            boolExpression, _type2 = self.children[0].evaluate()
+        type1 = self.value
+        symbol_table.create(self.children[0].value, type1)
 
-            if(_type1 == _type2):
-                symbol_table.create(identifier, _type1)
-                symbol_table.setter(identifier, boolExpression)
+        if(len(self.children) == 2):
+            boolExpression, type2 = self.children[1].evaluate(symbol_table)
+
+            if(type1 == type2):
+                symbol_table.setter(self.children[0].value, boolExpression)
             else:
-                raise TypeError
-        else:
-            raise TypeError
+                raise IncompatibleTypes(f" [VARDEC - EVALUATE] Setting a value type [{type2}] inconsistent with the variable type [{type1}]")

@@ -1,2 +1,2 @@
 class _Type:
-    STR      = 'STRING'
+    VARIABLE_STR      = 'VARIABLE_STR'
