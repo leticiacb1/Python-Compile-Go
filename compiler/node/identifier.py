@@ -10,5 +10,5 @@ class Identifier(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> (int, str):
-        value, _type = symbol_table.getter(self.value)
+        value, _type, size = symbol_table.getter(self.value)
         return value, _type

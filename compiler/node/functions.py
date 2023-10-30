@@ -20,7 +20,13 @@ class Println(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> None:
+        self.ASM.write(instruction=f"; ----- [PRINTLN - EVALUATE]  -----\n")
         expression_result , _type = self.children[0].evaluate(symbol_table)
+        self.ASM.write(instruction=f"; > Childrens : {expression_result} -----\n")
+        self.ASM.write(instruction=f"PUSH EAX ;\n")
+        self.ASM.write(instruction=f"PUSH formatout ;\n")
+        self.ASM.write(instruction=f"CALL printf ;\n")
+        self.ASM.write(instruction=f"ADD ESP , 8 ;\n")
         print(expression_result)
 
 class If(Node):
@@ -86,10 +92,19 @@ class Scanln(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> (int, str):
+        self.ASM.write(instruction=f"; ----- [SCANLN - EVALUATE]  -----\n")
+
         number = input()
 
         # Número
         if(number.isdigit()):
+            self.ASM.write(instruction=f"PUSH scanint ;\n")
+            self.ASM.write(instruction=f"PUSH formatin ;\n")
+            self.ASM.write(instruction=f"CALL scanf ;\n")
+            self.ASM.write(instruction=f"ADD ESP , 8 ;\n")
+            self.ASM.write(instruction=f"MOV EAX , DWORD [scanint] ;\n")
+            self.ASM.write(instruction=f"MOV [EBP - 4] , EAX ;\n")
+
             return int(number), types.TYPE_INT
 
         raise InvalidType(f" [SCANLN - EVALUATE] Only the integer type is accepted in the Scanln function. Tried type: {type(number)}")

@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
+from compiler.ASM import ASM
  
 class Node(ABC):
     
-    def __init__(self, value :  int | str ):
+    def __init__(self, value :  int | str):
         self.value = value
         self.children = []
+        self.ASM = ASM()
     
     def add_child(self, child ):
         self.children.append(child)     
