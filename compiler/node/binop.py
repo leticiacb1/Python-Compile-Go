@@ -15,40 +15,35 @@ class BinOp(Node):
 
     def evaluate(self, symbol_table) -> (int, int | str):
 
-        valueLeft, type1 = self.children[0].evaluate(symbol_table)
         valueRight, type2 = self.children[1].evaluate(symbol_table)
-
-        self.ASM.write(instruction=f"\t; ----- [BINOP - EVALUATE]  -----\n")
-        self.ASM.write(instruction=f"\t; > Childrens : {self.children[0]} e  {self.children[1]} -----\n")
-        self.ASM.write(instruction=f"MOV EAX , {valueRight} ; \n")
-        self.ASM.write(instruction=f"PUSH EAX ; \n")
-        self.ASM.write(instruction=f"MOV EAX , {valueLeft} ; \n")
-        self.ASM.write(instruction=f"POP EBX ; \n")
+        self.ASM.write(instruction=f"PUSH EAX  \n")
+        valueLeft, type1 = self.children[0].evaluate(symbol_table)
+        self.ASM.write(instruction=f"POP EBX  \n")
 
         if (self.value == operators._Type.PLUS):
             if( (type1 == types.TYPE_INT) and (type2 == types.TYPE_INT) ):
-                self.ASM.write(instruction=f"ADD EAX , EBX ; \n")
+                self.ASM.write(instruction=f"ADD EAX , EBX ; Binop({valueLeft} + {valueRight})\n\n")
                 return valueLeft + valueRight, types.TYPE_INT
 
             raise IncompatibleTypes(f" [Binop - Evaluate] Incompatible Types find in + operation : {type1} + {type2}")
 
         if (self.value == operators._Type.MINUS):
             if ((type1 == types.TYPE_INT) and (type2 == types.TYPE_INT)):
-                self.ASM.write(instruction=f"SUB EAX , EBX ; \n")
+                self.ASM.write(instruction=f"SUB EAX , EBX ; Binop({valueLeft} - {valueRight}) \n\n")
                 return valueLeft - valueRight, types.TYPE_INT
 
             raise IncompatibleTypes(f" [Binop - Evaluate] Incompatible Types find in - operation : {type1} - {type2}")
 
         if (self.value == operators._Type.BAR):
             if ((type1 == types.TYPE_INT) and (type2 == types.TYPE_INT)):
-                self.ASM.write(instruction=f"DIV EBX ; \n")
+                self.ASM.write(instruction=f"DIV EBX ; Binop({valueLeft} / {valueRight}) \n\n")
                 return valueLeft//valueRight, types.TYPE_INT
 
             raise IncompatibleTypes(f" [Binop - Evaluate] Incompatible Types find in / operation : {type1} / {type2}")
 
         if (self.value == operators._Type.TIMES):
             if ((type1 == types.TYPE_INT) and (type2 == types.TYPE_INT)):
-                self.ASM.write(instruction=f"IMUL EAX, EBX ; \n")
+                self.ASM.write(instruction=f"IMUL EAX, EBX ; Binop({valueLeft} * {valueRight}) \n\n")
                 return valueLeft * valueRight, types.TYPE_INT
 
             raise IncompatibleTypes(f" [Binop - Evaluate] Incompatible Types find in * operation : {type1} * {type2}")
@@ -56,7 +51,7 @@ class BinOp(Node):
         if (self.value == operators._Type.OR):
             if ((type1 == types.TYPE_INT) and (type2 == types.TYPE_INT)):
 
-                self.ASM.write(instruction=f"OR EAX, EBX ; \n")
+                self.ASM.write(instruction=f"OR EAX, EBX ; Binop({valueLeft} || {valueRight}) \n\n")
                 if(valueLeft or valueRight):
                     return 1, types.TYPE_INT
                 return 0, types.TYPE_INT
@@ -66,7 +61,7 @@ class BinOp(Node):
         if (self.value == operators._Type.AND):
             if ((type1 == types.TYPE_INT) and (type2 == types.TYPE_INT)):
 
-                self.ASM.write(instruction=f"AND EAX, EBX ; \n")
+                self.ASM.write(instruction=f"AND EAX, EBX ; Binop({valueLeft} && {valueRight}) \n\n")
                 if(valueLeft and valueRight):
                     return 1, types.TYPE_INT
                 return 0, types.TYPE_INT
@@ -75,8 +70,8 @@ class BinOp(Node):
 
         if (self.value == operators._Type.BIGGER_THEN):
             if (type1 == type2):
-                self.ASM.write(instruction=f"CMP EAX, EBX ; \n")
-                self.ASM.write(instruction=f"JMP binop_jg; \n")
+                self.ASM.write(instruction=f"CMP EAX, EBX ; Binop({valueLeft} > {valueRight}) \n\n")
+                self.ASM.write(instruction=f"JMP binop_jg ; \n")
                 if(valueLeft > valueRight):
                     return 1, types.TYPE_INT
                 return 0, types.TYPE_INT
@@ -85,7 +80,7 @@ class BinOp(Node):
 
         if (self.value == operators._Type.LESS_THAN):
             if (type1 == type2):
-                self.ASM.write(instruction=f"CMP EAX, EBX ; \n")
+                self.ASM.write(instruction=f"CMP EAX, EBX ; Binop({valueLeft} < {valueRight}) \n\n")
                 self.ASM.write(instruction=f"JMP binop_jl ; \n")
                 if (valueLeft < valueRight):
                     return 1, types.TYPE_INT
@@ -95,7 +90,7 @@ class BinOp(Node):
 
         if (self.value == operators._Type.EQUAL_COMP):
             if (type1 == type2):
-                self.ASM.write(instruction=f"CMP EAX, EBX ; \n")
+                self.ASM.write(instruction=f"CMP EAX, EBX ; Binop({valueLeft} == {valueRight}) \n\n")
                 self.ASM.write(instruction=f"JMP binop_je ; \n")
                 if (valueLeft == valueRight):
                     return 1, types.TYPE_INT

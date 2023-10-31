@@ -20,13 +20,17 @@ class Println(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> None:
-        self.ASM.write(instruction=f"\t; ----- [PRINTLN - EVALUATE]  -----\n")
         expression_result , _type = self.children[0].evaluate(symbol_table)
-        self.ASM.write(instruction=f"; > Childrens : {expression_result} -----\n")
-        self.ASM.write(instruction=f"PUSH EAX ;\n")
-        self.ASM.write(instruction=f"PUSH formatout ;\n")
-        self.ASM.write(instruction=f"CALL printf ;\n")
-        self.ASM.write(instruction=f"ADD ESP , 8 ;\n")
+
+        instruction = f'''
+                        ; --- Println ---
+                        PUSH EAX 
+                        PUSH formatout 
+                        CALL printf 
+                        ADD ESP , 8\n
+                      '''
+        self.ASM.write(instruction= instruction)
+
         print(expression_result)
 
 class If(Node):
@@ -44,23 +48,27 @@ class If(Node):
 
     def evaluate(self, symbol_table) -> None:
 
-        self.ASM.write(instruction=f"\t; ----- [IF - EVALUATE]  -----\n")
         self.children[0].evaluate(symbol_table)                  # Inicialização
-        self.ASM.write(instruction=f"IF_{self.id}: ;\n")
-        self.ASM.write(instruction=f"CMP EAX , False ;\n")
-        self.ASM.write(instruction=f"JMP ELSE_{self.id} ;\n")
+
+        instruction = f'''
+                        ; --- If ---
+                        IF_{self.id}: 
+                        CMP EAX , False 
+                        JMP ELSE_{self.id} \n
+                      '''
+        self.ASM.write(instruction=instruction)
 
         # Bloco If
-        self.children[1].evaluate(symbol_table)    # Bloco if
-        self.ASM.write(instruction=f"JMP END_{self.id} ;\n")
+        self.children[1].evaluate(symbol_table)
+        self.ASM.write(instruction=f"JMP END_{self.id} \n")
 
         # Bloco Else
-        self.ASM.write(instruction=f"ELSE_{self.id}: ; \n")
+        self.ASM.write(instruction=f"ELSE_{self.id}: \n")
         if(len(self.children) > 2):
-            self.children[2].evaluate(symbol_table) # Bloco else
+            self.children[2].evaluate(symbol_table)
 
         # Fim
-        self.ASM.write(instruction=f"END_{self.id}: ;\n")
+        self.ASM.write(instruction=f"END_{self.id}: \n")
 
         conditional = self.children[0]
         block_if    = self.children[1]
@@ -86,25 +94,19 @@ class For(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> None:
-        self.ASM.write(instruction=f"\t; ----- [FOR - EVALUATE]  -----\n")
-        # self.ASM.write(instruction=f"{self.children[0].evaluate(symbol_table)} ; Inicialização\n")
+
         self.children[0].evaluate(symbol_table)  # Inicialização
-
         self.ASM.write(instruction=f"LOOP_{self.id}: ;\n")
-
-        # self.ASM.write(instruction=f"{self.children[1].evaluate(symbol_table)} ; Condição\n")
         self.children[1].evaluate(symbol_table)  # Condição
 
         self.ASM.write(instruction=f"CMP EAX , False ;\n")
         self.ASM.write(instruction=f"JE EXIT_{self.id} ;\n")
 
-        # self.ASM.write(instruction=f"{self.children[4].evaluate(symbol_table)} ; Bloco de Instruções\n")
-        # self.ASM.write(instruction=f"{self.children[3].evaluate(symbol_table)} ; Incremento \n")
         self.children[3].evaluate(symbol_table)  # Bloco de Intruções
         self.children[2].evaluate(symbol_table)  # Incremento
 
         self.ASM.write(instruction=f"JMP LOOP_{self.id} ; Volta para o loop \n")
-        self.ASM.write(instruction=f"EXIT_{self.id}:   ; Saida \n")
+        self.ASM.write(instruction=f"EXIT_{self.id}:    ; Saida \n\n")
 
         condition  = self.children[1]
         increment  = self.children[2]
@@ -132,13 +134,16 @@ class Scanln(Node):
 
         # Número
         if(number.isdigit()):
-            self.ASM.write(instruction=f"\t; ----- [SCANLN - EVALUATE]  -----\n")
-            self.ASM.write(instruction=f"PUSH scanint ;\n")
-            self.ASM.write(instruction=f"PUSH formatin ;\n")
-            self.ASM.write(instruction=f"CALL scanf ;\n")
-            self.ASM.write(instruction=f"ADD ESP , 8 ;\n")
-            self.ASM.write(instruction=f"MOV EAX , DWORD [scanint] ;\n")
-            self.ASM.write(instruction=f"MOV [EBP - 4] , EAX ;\n")
+            instruction = f'''
+                            ; --- Scanln ---
+                            PUSH scanint
+                            PUSH formatin
+                            CALL scanf
+                            ADD ESP , 8 
+                            MOV EAX , DWORD [scanint]
+                            MOV [EBP - 4] , EAX \n\n
+                           '''
+            self.ASM.write(instruction=instruction)
 
             return int(number), types.TYPE_INT
 

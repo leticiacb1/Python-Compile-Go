@@ -12,19 +12,19 @@ class UnOp(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> (int, str):
-        self.ASM.write(instruction=f"\t; ----- [UNARY - EVALUATE]  -----\n")
         if (self.value == operators._Type.PLUS):
             valor, _type = self.children[0].evaluate(symbol_table)
+            self.ASM.write(instruction=f"\t; NEG EAX; UnOp(value = {self.value})\n\n")
             return (1)*valor, _type
 
         if (self.value == operators._Type.MINUS):
             valor, _type = self.children[0].evaluate(symbol_table)
-            self.ASM.write(instruction=f"\t; NEG EAX; \n")
+            self.ASM.write(instruction=f"\t; NEG EAX; UnOp(value = {self.value})\n\n")
             return (-1)*valor, _type
 
         if (self.value == operators._Type.NOT):
             valor, _type = self.children[0].evaluate(symbol_table)
-            self.ASM.write(instruction=f"\t; NOT EAX; \n")
+            self.ASM.write(instruction=f"\t; NOT EAX; UnOp(value = {self.value})\n\n")
             return not valor, _type
 
         raise InvalidOperators(f" [UnOp - Evaluate] Invalid operator type = {self.value}")
