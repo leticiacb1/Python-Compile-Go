@@ -20,7 +20,7 @@ class Println(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> None:
-        self.ASM.write(instruction=f"; ----- [PRINTLN - EVALUATE]  -----\n")
+        self.ASM.write(instruction=f"\t; ----- [PRINTLN - EVALUATE]  -----\n")
         expression_result , _type = self.children[0].evaluate(symbol_table)
         self.ASM.write(instruction=f"; > Childrens : {expression_result} -----\n")
         self.ASM.write(instruction=f"PUSH EAX ;\n")
@@ -44,6 +44,24 @@ class If(Node):
 
     def evaluate(self, symbol_table) -> None:
 
+        self.ASM.write(instruction=f"\t; ----- [IF - EVALUATE]  -----\n")
+        self.children[0].evaluate(symbol_table)                  # Inicialização
+        self.ASM.write(instruction=f"IF_{self.id}: ;\n")
+        self.ASM.write(instruction=f"CMP EAX , False ;\n")
+        self.ASM.write(instruction=f"JMP ELSE_{self.id} ;\n")
+
+        # Bloco If
+        self.children[1].evaluate(symbol_table)    # Bloco if
+        self.ASM.write(instruction=f"JMP END_{self.id} ;\n")
+
+        # Bloco Else
+        self.ASM.write(instruction=f"ELSE_{self.id}: ; \n")
+        if(len(self.children) > 2):
+            self.children[2].evaluate(symbol_table) # Bloco else
+
+        # Fim
+        self.ASM.write(instruction=f"END_{self.id}: ;\n")
+
         conditional = self.children[0]
         block_if    = self.children[1]
 
@@ -51,7 +69,6 @@ class If(Node):
             block_if.evaluate(symbol_table)
         elif(len(self.children) > 2):
             #Bloco else
-
             if (not conditional.evaluate(symbol_table)):
                 self.children[2].evaluate(symbol_table)
 
@@ -69,8 +86,26 @@ class For(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> None:
+        self.ASM.write(instruction=f"\t; ----- [FOR - EVALUATE]  -----\n")
+        # self.ASM.write(instruction=f"{self.children[0].evaluate(symbol_table)} ; Inicialização\n")
+        self.children[0].evaluate(symbol_table)  # Inicialização
 
-        self.children[0].evaluate(symbol_table)
+        self.ASM.write(instruction=f"LOOP_{self.id}: ;\n")
+
+        # self.ASM.write(instruction=f"{self.children[1].evaluate(symbol_table)} ; Condição\n")
+        self.children[1].evaluate(symbol_table)  # Condição
+
+        self.ASM.write(instruction=f"CMP EAX , False ;\n")
+        self.ASM.write(instruction=f"JE EXIT_{self.id} ;\n")
+
+        # self.ASM.write(instruction=f"{self.children[4].evaluate(symbol_table)} ; Bloco de Instruções\n")
+        # self.ASM.write(instruction=f"{self.children[3].evaluate(symbol_table)} ; Incremento \n")
+        self.children[3].evaluate(symbol_table)  # Bloco de Intruções
+        self.children[2].evaluate(symbol_table)  # Incremento
+
+        self.ASM.write(instruction=f"JMP LOOP_{self.id} ; Volta para o loop \n")
+        self.ASM.write(instruction=f"EXIT_{self.id}:   ; Saida \n")
+
         condition  = self.children[1]
         increment  = self.children[2]
         block      = self.children[3]
@@ -92,12 +127,12 @@ class Scanln(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> (int, str):
-        self.ASM.write(instruction=f"; ----- [SCANLN - EVALUATE]  -----\n")
 
         number = input()
 
         # Número
         if(number.isdigit()):
+            self.ASM.write(instruction=f"\t; ----- [SCANLN - EVALUATE]  -----\n")
             self.ASM.write(instruction=f"PUSH scanint ;\n")
             self.ASM.write(instruction=f"PUSH formatin ;\n")
             self.ASM.write(instruction=f"CALL scanf ;\n")

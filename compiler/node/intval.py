@@ -10,7 +10,7 @@ class IntVal(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> (int, str):
-        self.ASM.write(instruction=f"; ----- [INTVAL - EVALUATE]  -----\n")
-        self.ASM.write(instruction=f"; > Children : None  -----\n")
+        self.ASM.write(instruction=f"\t; ----- [INTVAL - EVALUATE]  -----\n")
+        self.ASM.write(instruction=f"\t; > Children : None  -----\n")
         self.ASM.write(instruction=f"MOV EAX , {self.value} ;\n")
         return self.value, types.TYPE_INT

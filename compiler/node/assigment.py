@@ -18,17 +18,16 @@ class Assigment(Node):
 
     def evaluate(self, symbol_table) -> None:
 
-        self.ASM.write(instruction=f"; ----- [ASSIGMENT - EVALUATE]  -----\n")
-
-        identifier, type1 , position = symbol_table.getter(self.children[0].value)
+        identifier, type1, position = symbol_table.getter(self.children[0].value)
         result_expression, type2 = self.children[1].evaluate(symbol_table)
 
-        self.ASM.write(instruction=f"; > Childrens : {print(identifier)} e {result_expression}")  # Resultado da atribuição
-
-        # It is only possible to set the value if it were of the same type
         if (type1 == type2):
+
+            self.ASM.write(instruction=f"\t; ----- [ASSIGMENT - EVALUATE]  -----\n")
+            self.ASM.write(instruction=f"\t; > Childrens : {identifier} e {result_expression}\n")
             self.ASM.write(instruction=f"MOV EAX , {result_expression} ;\n")
             self.ASM.write(instruction=f"MOV[EBP - {position}], EAX ;\n")
+
             symbol_table.setter(self.children[0].value, result_expression)
         else:
             raise IncompatibleTypes(f" [ASSIGMENT - EVALUATE] Setting a value type [{type2}] inconsistent with the variable type [{type1}]")

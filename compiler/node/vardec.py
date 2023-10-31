@@ -19,8 +19,8 @@ identifier      Caso possua BoolExpression
 
     def evaluate(self, symbol_table) -> (int, str):
 
-        self.ASM.write(instruction=f"; ----- [VARDEC - EVALUATE]  -----\n")
-        self.ASM.write(instruction=" PUSH DWORD 0 ;\n")  # Aloca espaço
+        self.ASM.write(instruction=f"\t; ----- [VARDEC - EVALUATE]  -----\n")
+        self.ASM.write(instruction=" PUSH DWORD 0 ;\n")
 
         type1 = self.value
         symbol_table.create(self.children[0].value, type1)
