@@ -19,15 +19,20 @@ identifier      Caso possua BoolExpression
 
     def evaluate(self, symbol_table) -> (int, str):
 
-        self.ASM.write(instruction=" PUSH DWORD 0 ;\n\n")
-
+        identifier = self.children[0]
         type1 = self.value
-        symbol_table.create(self.children[0].value, type1)
+        symbol_table.create(identifier.value, type1)
+
+        instruction = f'''
+                ; Vardec(identifier = {identifier.value})
+                PUSH DWORD 0 \n
+                '''
+        self.ASM.body += instruction
 
         if(len(self.children) == 2):
             boolExpression, type2 = self.children[1].evaluate(symbol_table)
 
             if(type1 == type2):
-                symbol_table.setter(self.children[0].value, boolExpression)
+                symbol_table.setter(identifier.value, boolExpression)
             else:
                 raise IncompatibleTypes(f" [VARDEC - EVALUATE] Setting a value type [{type2}] inconsistent with the variable type [{type1}]")

@@ -20,8 +20,11 @@ class SymbolTable:
         self.table = {}
         self.n_rows = 0
 
-    def getter(self, identifier) -> (int, str , int):
-        return self.table[identifier][0], self.table[identifier][1] , self.table[identifier][2]
+    def get_value_type(self, identifier) -> (int, str , int):
+        return self.table[identifier][0], self.table[identifier][1]
+
+    def get_position(self, identifier):
+        return self.table[identifier][2]
 
     def create(self, identifier: str, _type: str) -> None:
         if(identifier not in self.table.keys()):

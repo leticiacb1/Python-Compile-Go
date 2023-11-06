@@ -12,19 +12,36 @@ class UnOp(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> (int, str):
+        (child) = self.children
+
+        assert self.value in [
+            operators._Type.PLUS,
+            operators._Type.MINUS,
+            operators._Type.NOT
+        ], InvalidOperators(f" [UnOp - Evaluate] Invalid operator type = {self.value}")
+
+        value, _type = child.evaluate(symbol_table)
+
         if (self.value == operators._Type.PLUS):
-            valor, _type = self.children[0].evaluate(symbol_table)
-            self.ASM.write(instruction=f"\t; NEG EAX; UnOp(value = {self.value})\n\n")
-            return (1)*valor, _type
+            instruction = f'''
+                                ; UnOp(value = {self.value})
+                                MOV EAX , {value} \n
+                            '''
+            self.ASM.body += instruction
+            return (1)*value, _type
 
         if (self.value == operators._Type.MINUS):
-            valor, _type = self.children[0].evaluate(symbol_table)
-            self.ASM.write(instruction=f"\t; NEG EAX; UnOp(value = {self.value})\n\n")
-            return (-1)*valor, _type
+            instruction = f'''
+                                ; UnOp(value =  {self.value})
+                                NEG EAX \n
+                            '''
+            self.ASM.body += instruction
+            return (-1)*value, _type
 
         if (self.value == operators._Type.NOT):
-            valor, _type = self.children[0].evaluate(symbol_table)
-            self.ASM.write(instruction=f"\t; NOT EAX; UnOp(value = {self.value})\n\n")
-            return not valor, _type
-
-        raise InvalidOperators(f" [UnOp - Evaluate] Invalid operator type = {self.value}")
+            instruction = f'''
+                                ; UnOp(value =  {self.value})
+                                MOV EAX , {not value} \n
+                            '''
+            self.ASM.body += instruction
+            return not value, _type

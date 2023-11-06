@@ -1,1 +1,1 @@
-from .assembler import ASM
+from .assembler import Assembler

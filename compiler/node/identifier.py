@@ -10,5 +10,13 @@ class Identifier(Node):
         super().__init__(value)
 
     def evaluate(self, symbol_table) -> (int, str):
-        value, _type, size = symbol_table.getter(self.value)
+        value, _type = symbol_table.get_value_type(self.value)
+        position = symbol_table.get_position(self.value)
+
+        instruction = f'''
+                ; Identifier(value = {self.value})
+                MOV EAX , [EBP - {position}]\n
+                '''
+        self.ASM.body += instruction
+
         return value, _type

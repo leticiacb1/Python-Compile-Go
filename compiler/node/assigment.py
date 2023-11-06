@@ -18,12 +18,20 @@ class Assigment(Node):
 
     def evaluate(self, symbol_table) -> None:
 
-        identifier, type1, position = symbol_table.getter(self.children[0].value)
-        result_expression, type2 = self.children[1].evaluate(symbol_table)
+        (identifier, expression) = self.children
+        value , type1 = symbol_table.get_value_type(identifier.value)
+        position      = symbol_table.get_position(identifier.value)
+
+        result_expression, type2 = expression.evaluate(symbol_table)
 
         if (type1 == type2):
-            self.ASM.write(instruction=f"MOV[EBP - {position}], EAX ; Assigment(identifier = {self.children[0].value} , value = {result_expression})\n\n")
 
-            symbol_table.setter(self.children[0].value, result_expression)
+            instruction = f'''
+                ; Assigment(identifier = {identifier.value} , value = {result_expression})
+                MOV[EBP - {position}], EAX \n
+                '''
+            self.ASM.body += instruction
+
+            symbol_table.setter(identifier.value, result_expression)
         else:
             raise IncompatibleTypes(f" [ASSIGMENT - EVALUATE] Setting a value type [{type2}] inconsistent with the variable type [{type1}]")
