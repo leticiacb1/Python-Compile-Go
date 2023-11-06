@@ -112,7 +112,7 @@ class BinOp(Node):
                 instruction = f'''
                 ; Binop({value_left} > {value_right})
                 CMP EAX, EBX  
-                JMP binop_jg  \n
+                CALL binop_jg  \n
                 '''
                 self.ASM.body += instruction
 
@@ -128,7 +128,7 @@ class BinOp(Node):
                 instruction = f'''
                 ; Binop({value_left} < {value_right})
                 CMP EAX, EBX  
-                JMP binop_jl  \n
+                CALL binop_jl  \n
                '''
                 self.ASM.body += instruction
 
@@ -144,7 +144,7 @@ class BinOp(Node):
                 instruction = f'''
                 ; Binop({value_left} == {value_right})
                 CMP EAX, EBX 
-                JMP binop_je \n
+                CALL binop_je \n
                '''
                 self.ASM.body += instruction
 
