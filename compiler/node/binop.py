@@ -18,11 +18,12 @@ class BinOp(Node):
 
         (left, right) = self.children
 
-        value_left, type1 = left.evaluate(symbol_table)
+        value_right, type2 = right.evaluate(symbol_table)
         self.ASM.body += f'''
                 PUSH EAX
                 '''
-        value_right, type2 = right.evaluate(symbol_table)
+
+        value_left, type1 = left.evaluate(symbol_table)
         self.ASM.body += f'''
                 POP EBX
                 '''
