@@ -1,5 +1,5 @@
 from compiler.tokenizer import Tokenizer
-from compiler.constants import delimiters, eof, invalid, number, operators, functions, identifier , text , types
+from compiler.constants import delimiters, number, operators, functions, identifier , text , types
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
 from compiler.node import (IntVal , StrVal , VarDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program)
@@ -29,6 +29,23 @@ class Parser:
             node_assigment = Assigment(value=operators._Type.EQUAL)
             node_assigment.add_child(node_identifier)  # Left
             node_assigment.add_child(bool_expression)  # Right
+
+
+        elif(tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+            while(tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
+                tokens.select_next()
+
+                bool_expression = Parser().parse_bool_expression()
+                if(tokens.next.type == delimiters._Type.COMMAN):
+                    tokens.select_next()
+                else:
+                    break
+
+            if(tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
+                tokens.select_next()
+            else:
+                raise InvalidExpression(f"\n [STATEMENT] Expected close parentheses token type | Got {tokens.next}")
+
 
         else:
             raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
@@ -467,7 +484,14 @@ class Parser:
 
                                 if (tokens.next.type == delimiters._Type.COMMAN):
                                     tokens.select_next()
+                                else:
+                                    break
 
+                    # Consome CLOSE_PARENTHESES:
+                    if(tokens.next.type == delimiters._Type.CLOSE_PARENTHESES)
+                        tokens.select_next()
+                    else:
+                        raise InvalidExpression(f"\n [DECLARATION] Expected close parentheses type | Got {tokens.next}")
 
                     if (tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
 
