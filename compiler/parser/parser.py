@@ -2,7 +2,7 @@ from compiler.tokenizer import Tokenizer
 from compiler.constants import delimiters, number, operators, functions, identifier , text , types
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal , StrVal , VarDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program)
+from compiler.node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program)
 
 
 class Parser:
@@ -474,52 +474,69 @@ class Parser:
                 raise InvalidExpression(f"\n [BLOCK] Expected END OF LINE type | Got {tokens.next}")
 
     @staticmethod
-    def declaration() -> None:
-        node_declaration = Block(value='FUNCDEC') # Alterar para o nó funcdec
+    def declaration() -> Node:
+        args_list = []
+
+        node_funcdec = FuncDec(value='FUNCDEC')
         tokens = Parser().tokenizer
 
         if (tokens.next.type == functions._Type.FUNC):
             tokens.select_next()
 
             if(tokens.next.type == identifier._Type.IDENTIFIER):
-                args = Identifier(value=tokens.next.value)
-                node_declaration.add_child()   # Add filho
+                function_name = Identifier(value=tokens.next.value)
+                tokens.select_next()
 
                 if (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
                     tokens.select_next()
 
                     while (tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
-                        tokens.select_next()
 
-                        # Add argumentos
+                        # ---- Add argumentos -----
                         if(tokens.next.type == identifier._Type.IDENTIFIER):
-                            args = Identifier(value=tokens.next.value)
+                            node_identifier = Identifier(value=tokens.next.value)
                             tokens.select_next()
 
                             if(tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
-                                _type = tokens.next.type  # onde eu guardo o tipo ?? ERA PRA SER UM VARDEC AO INVES DE UM IDENTIFIER?
+                                _type = tokens.next.type
                                 tokens.select_next()
 
                                 if (tokens.next.type == delimiters._Type.COMMAN):
+
+                                    arg = VarDec(value=_type)
+                                    arg.add_child(node_identifier)
+                                    args_list.append(arg)
+
                                     tokens.select_next()
                                 else:
                                     break
 
                     # Consome CLOSE_PARENTHESES:
-                    if(tokens.next.type == delimiters._Type.CLOSE_PARENTHESES)
+                    if(tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
                         tokens.select_next()
                     else:
                         raise InvalidExpression(f"\n [DECLARATION] Expected close parentheses type | Got {tokens.next}")
 
                     if (tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
 
+                        node_definition = VarDec(value=tokens.next.type)
+                        node_definition.add_child(function_name)
+
                         tokens.select_next()
                         node_block = Parser().block()
 
                         if (tokens.next.type == delimiters._Type.END_OF_LINE):
-                            node_declaration.add_child()
+                            # Add definição da função como filho:
+                            node_funcdec.add_child(node_definition)
 
-                            return node_declaration
+                            # Add argumentos
+                            for arg in args_list:
+                                node_funcdec.add_child(arg)
+
+                            # Add bloco de execução da função
+                            node_funcdec.add_child(node_block)
+
+                            return node_funcdec
 
     @staticmethod
     def program() -> Node:
