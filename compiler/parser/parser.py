@@ -2,7 +2,7 @@ from compiler.tokenizer import Tokenizer
 from compiler.constants import delimiters, number, operators, functions, identifier , text , types
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program)
+from compiler.node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program , Return)
 
 
 class Parser:
@@ -445,9 +445,9 @@ class Parser:
             tokens.select_next()
 
             bool_expression = Parser().parse_bool_expression()
-            node_return = "" # Criar nó do tipo Return com bool expression como filho
+            node_return = Return(value='RETURN')
+            node_return.add_child(bool_expression)
 
-            # node_return.add_child(bool_expression)
             return node_return
 
         else:
