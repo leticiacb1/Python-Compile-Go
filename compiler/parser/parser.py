@@ -406,6 +406,15 @@ class Parser:
             else:
                 raise InvalidExpression(f"\n [STATEMENT] Expected identifier type | Got {tokens.next}")
 
+        elif (tokens.next.type == functions._Type.RETURN):
+            tokens.select_next()
+
+            bool_expression = Parser().parse_bool_expression()
+            node_return = "" # Criar nó do tipo Return com bool expression como filho
+
+            # node_return.add_child(bool_expression)
+            return node_return
+
         else:
             raise InvalidToken(f"\n [STATEMENT] Token type recived : {tokens.next.type}")
 
