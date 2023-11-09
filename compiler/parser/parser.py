@@ -430,6 +430,47 @@ class Parser:
                 raise InvalidExpression(f"\n [BLOCK] Expected END OF LINE type | Got {tokens.next}")
 
     @staticmethod
+    def declaration() -> None:
+        node_declaration = Block(value='FUNCDEC') # Alterar para o nó funcdec
+        tokens = Parser().tokenizer
+
+        if (tokens.next.type == functions._Type.FUNC):
+            tokens.select_next()
+
+            if(tokens.next.type == identifier._Type.IDENTIFIER):
+                args = Identifier(value=tokens.next.value)
+                node_declaration.add_child()   # Add filho
+
+                if (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+                    tokens.select_next()
+
+                    while (tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
+                        tokens.select_next()
+
+                        # Add argumentos
+                        if(tokens.next.type == identifier._Type.IDENTIFIER):
+                            args = Identifier(value=tokens.next.value)
+                            tokens.select_next()
+
+                            if(tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
+                                _type = tokens.next.type  # onde eu guardo o tipo ?? ERA PRA SER UM VARDEC AO INVES DE UM IDENTIFIER?
+                                tokens.select_next()
+
+                                if (tokens.next.type == delimiters._Type.COMMAN):
+                                    tokens.select_next()
+
+
+                    if (tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
+
+                        tokens.select_next()
+                        node_block = Parser().block()
+
+                        if (tokens.next.type == delimiters._Type.END_OF_LINE):
+                            node_declaration.add_child()
+
+                            return node_declaration
+
+    @staticmethod
     def program() -> Node:
 
         node_program = Program(value='PROGRAM')
