@@ -20,7 +20,9 @@ class Tokenizer:
             'else': {'type': functions._Type.ELSE, 'value': functions._Value.ELSE},
             'var': {'type': functions._Type.VAR , 'value': functions._Value.VAR },
             'int': {'type': types.TYPE_INT, 'value': 0},
-            'string': {'type': types.TYPE_STR, 'value': 0}
+            'string': {'type': types.TYPE_STR, 'value': 0},
+            'return': {'type': functions._Type.RETURN, 'value': functions._Value.RETURN},
+            'func': {'type': functions._Type.FUNC, 'value': functions._Value.FUNC}
         }
 
     def select_next(self) -> None:
@@ -127,6 +129,10 @@ class Tokenizer:
                     break
                 elif (self.source[self.position] == delimiters._Type.SEMICOLON):
                     self.next = TokenDelimiter(type=delimiters._Type.SEMICOLON, value=delimiters._Value.SEMICOLON)
+                    self.position += 1
+                    break
+                elif (self.source[self.position] == delimiters._Type.COMMAN):
+                    self.next = TokenDelimiter(type=delimiters._Type.COMMAN, value=delimiters._Value.COMMAN)
                     self.position += 1
                     break
                 elif(self.source[self.position] == delimiters._Type.QUOTATION_MARKS):
