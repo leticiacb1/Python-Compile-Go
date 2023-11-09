@@ -74,8 +74,26 @@ class Parser:
 
         elif (tokens.next.type == identifier._Type.IDENTIFIER):
             node = Identifier(value=tokens.next.value)
-
             tokens.select_next()
+
+            if(tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+                tokens.select_next()
+
+                while(tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
+                    tokens.select_next()
+
+                    bool_expression = Parser().parse_bool_expression()  # Add as children
+
+                    if(tokens.next.type != delimiters._Type.COMMAN):
+                        tokens.select_next()
+                    else:
+                        break
+
+            if (tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
+                tokens.select_next()
+            else:
+                raise InvalidExpression(f"\n [FACTOR] Expected close parentheses token type | Got {tokens.next}")
+
             return node
 
         elif (tokens.next.type == operators._Type.PLUS):
