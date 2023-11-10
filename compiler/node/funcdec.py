@@ -1,4 +1,5 @@
 from .node import Node
+from compiler.table import FunctionTable
 
 class FuncDec(Node):
     '''
@@ -13,7 +14,7 @@ class FuncDec(Node):
             -------------------FuncDec -------------------
            /             |       ...      |               \
        VarDec          Vardec            VardDec         Block
-    (declração)          |------ args ------|        (Ação da função)
+    (declaração)          |------ args ------|        (Ação da função)
          |
     identifier
 
@@ -21,6 +22,14 @@ class FuncDec(Node):
 
     def __init__(self, value):
         super().__init__(value)
+        self.function_table = FunctionTable
 
     def evaluate(self, symbol_table) -> (None, None):
+        '''
+        Declara função
+        '''
+        node_declaration = self.children[0]
+        function_name = node_declaration.value
+
+        self.function_table.declare(function_name, node_declaration, node_declaration.value)
         return None, None

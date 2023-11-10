@@ -1,6 +1,7 @@
 from compiler.errors.symbol_table import ExistingKey
 from compiler.node import Node
 
+
 class FunctionTable:
     '''
     Formato  :
@@ -12,11 +13,13 @@ class FunctionTable:
 
     table = {}
 
-    def getter(function_name : str) -> (Node, str):
-        return FunctionTable.table[function_name][0], FunctionTable.table[function_name][1]
+    @classmethod
+    def getter(cls, name: str) -> (Node, str):
+        return cls.table[name][0], cls.table[name][1]
 
-    def declare(function_name : str, node: Node, type: str) -> None:
-        if function_name not in FunctionTable.table.keys():
-            FunctionTable.table[function_name] = (node, type)
+    @classmethod
+    def declare(cls, name: str, node: Node, _type: str) -> None:
+        if name not in cls.table.keys():
+            cls.table[name] = (node, _type)
         else:
-            raise ExistingKey(f" [FUNCTION TABLE - CREATE] The function [{function_name}] has already been declared.")
+            raise ExistingKey(f" [FUNCTION TABLE - CREATE] The function [{name}] has already been declared.")
