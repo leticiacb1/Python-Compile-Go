@@ -31,5 +31,5 @@ class FuncDec(Node):
         node_declaration = self.children[0]
         function_name = node_declaration.value
 
-        self.function_table.declare(function_name, node_declaration, node_declaration.value)
+        self.function_table.declare(function_name, self, node_declaration.value)
         return None, None

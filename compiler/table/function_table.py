@@ -5,9 +5,9 @@ from compiler.node import Node
 class FunctionTable:
     '''
     Formato  :
-                Nome da função |     Nó endereço    |   Type
-                --------------------------------------------
-                    main                  Node       (Int or str)
+                Nome da função |     Nó endereço da função    |   Type
+                ---------------------------------------------------------------
+                    main          Próprio nó FuncDec             (Int or str)
 
     '''
 
