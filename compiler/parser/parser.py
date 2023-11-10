@@ -89,10 +89,10 @@ class Parser:
                     else:
                         break
 
-            if (tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
-                tokens.select_next()
-            else:
-                raise InvalidExpression(f"\n [FACTOR] Expected close parentheses token type | Got {tokens.next}")
+                if (tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
+                    tokens.select_next()
+                else:
+                    raise InvalidExpression(f"\n [FACTOR] Expected close parentheses token type | Got {tokens.next}")
 
             return node
 

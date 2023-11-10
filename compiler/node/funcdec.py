@@ -4,7 +4,7 @@ class FuncDec(Node):
     '''
     Declaração de função.
 
-    Possui pelo menos 2 filhos:
+    Possui n+2 filhos, onde n é o número de argumentos e os 2 filhos obrigatórios é a declaração da função e o seu bloco de execução.
 
     Exemplos:
      1 . Declaração com apenas 2 filhos : def main () { ... }                [2 filhos]
