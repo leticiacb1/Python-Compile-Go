@@ -568,6 +568,9 @@ class Parser:
 
         tokens.select_next()
 
+        # Add função principal do programa:
+        main_function = FuncCall(value='main')
+        node_program.add_child(main_function)
         return node_program
 
     @staticmethod
