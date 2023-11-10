@@ -2,7 +2,7 @@ from compiler.tokenizer import Tokenizer
 from compiler.constants import delimiters, number, operators, functions, identifier , text , types
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program , Return)
+from compiler.node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program , Return, FuncCall)
 
 
 class Parser:
@@ -77,12 +77,14 @@ class Parser:
             tokens.select_next()
 
             if(tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+                func_call_node = FuncCall(value=node.value)
                 tokens.select_next()
 
                 while(tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
                     tokens.select_next()
 
-                    bool_expression = Parser().parse_bool_expression()  # Add as children
+                    bool_expression = Parser().parse_bool_expression()
+                    func_call_node.add_child(bool_expression)
 
                     if(tokens.next.type != delimiters._Type.COMMAN):
                         tokens.select_next()
@@ -91,6 +93,7 @@ class Parser:
 
                 if (tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
                     tokens.select_next()
+                    node = func_call_node
                 else:
                     raise InvalidExpression(f"\n [FACTOR] Expected close parentheses token type | Got {tokens.next}")
 
@@ -448,6 +451,7 @@ class Parser:
             node_return = Return(value='RETURN')
             node_return.add_child(bool_expression)
 
+            print(tokens.next.value)
             return node_return
 
         else:
@@ -474,7 +478,7 @@ class Parser:
                 raise InvalidExpression(f"\n [BLOCK] Expected END OF LINE type | Got {tokens.next}")
 
     @staticmethod
-    def declaration() -> Node:
+    def parser_declaration() -> Node:
         args_list = []
 
         node_funcdec = FuncDec(value='FUNCDEC')
@@ -545,7 +549,8 @@ class Parser:
         tokens = Parser().tokenizer
 
         while (tokens.next.type != "EOF"):
-            state = Parser().parser_statement()
+            #state = Parser().parser_statement()
+            declaration = Parser().parser_declaration()
 
             # Consumo um \n no final
             if (tokens.next.type == delimiters._Type.END_OF_LINE):
@@ -553,7 +558,8 @@ class Parser:
             else:
                 raise InvalidExpression(f"\n [PROGRAM] Expected END OF LINE type | Got {tokens.next}")
 
-            node_program.add_child(state)
+            #node_program.add_child(state)
+            node_program.add_child(declaration)
 
         tokens.select_next()
 

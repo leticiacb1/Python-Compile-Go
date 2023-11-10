@@ -12,3 +12,4 @@ from .program     import Program
 from .vardec      import VarDec
 from .funcdec     import FuncDec
 from .return_func import Return
+from .func_call   import FuncCall
