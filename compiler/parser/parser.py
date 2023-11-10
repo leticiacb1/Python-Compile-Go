@@ -30,12 +30,17 @@ class Parser:
             node_assigment.add_child(node_identifier)  # Left
             node_assigment.add_child(bool_expression)  # Right
 
+            return node_assigment
 
         elif(tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+            func_call_node = FuncCall(value = node_identifier.value)
+
             while(tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
                 tokens.select_next()
 
                 bool_expression = Parser().parse_bool_expression()
+                func_call_node.add_child(bool_expression)
+
                 if(tokens.next.type == delimiters._Type.COMMAN):
                     tokens.select_next()
                 else:
@@ -46,11 +51,11 @@ class Parser:
             else:
                 raise InvalidExpression(f"\n [STATEMENT] Expected close parentheses token type | Got {tokens.next}")
 
-
+            return func_call_node
         else:
             raise InvalidExpression(f"\n [STATEMENT] Expected assigment token type | Got {tokens.next}")
 
-        return node_assigment
+
 
     @staticmethod
     def parser_factor() -> Node:
