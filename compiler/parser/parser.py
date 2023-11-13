@@ -500,6 +500,7 @@ class Parser:
 
             if(tokens.next.type == identifier._Type.IDENTIFIER):
                 function_name = Identifier(value=tokens.next.value)
+                print(f" NOME DA FUNÇÃO : {function_name.value}")
                 tokens.select_next()
 
                 if (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):

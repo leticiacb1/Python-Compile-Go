@@ -28,8 +28,9 @@ class FuncDec(Node):
         '''
         Declara função
         '''
+
         node_declaration = self.children[0]
-        function_name = node_declaration.value
+        function_name = node_declaration.children[0].value
 
         self.function_table.declare(function_name, self, node_declaration.value)
         return None, None

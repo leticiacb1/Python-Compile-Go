@@ -16,5 +16,5 @@ class Return(Node):
 
     def evaluate(self, symbol_table) -> (None, None):
         bool_expression = self.children[0]
-        bool_expression.evaluate()
+        bool_expression.evaluate(symbol_table)
         return None, None
