@@ -18,3 +18,5 @@ class TokenDelimiter(Tokens):
             return  "({0} , 'SEMICOLON')".format(self.type)
         if (self.type == "\n"):
             return  "( '\\n', 'END_OF_LINE')"
+        if (self.type == ","):
+            return  "({0} , 'COMMAN')".format(self.type)

@@ -33,11 +33,10 @@ class Parser:
             return node_assigment
 
         elif(tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
+            tokens.select_next()
+
             func_call_node = FuncCall(value = node_identifier.value)
-
             while(tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
-                tokens.select_next()
-
                 bool_expression = Parser().parse_bool_expression()
                 func_call_node.add_child(bool_expression)
 
@@ -86,12 +85,10 @@ class Parser:
                 tokens.select_next()
 
                 while(tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
-                    tokens.select_next()
-
                     bool_expression = Parser().parse_bool_expression()
                     func_call_node.add_child(bool_expression)
 
-                    if(tokens.next.type != delimiters._Type.COMMAN):
+                    if(tokens.next.type == delimiters._Type.COMMAN):
                         tokens.select_next()
                     else:
                         break
@@ -357,10 +354,11 @@ class Parser:
 
         if (tokens.next.type == delimiters._Type.END_OF_LINE):
             tokens.select_next()
-            return NoOp(value='END_OF_LINE')
+            node = NoOp(value='END_OF_LINE')
 
         elif (tokens.next.type == identifier._Type.IDENTIFIER):
-            return  Parser().parser_assigment()
+            node = Parser().parser_assigment()
+            #return
         elif (tokens.next.type == functions._Type.PRINTLN):
             tokens.select_next()
 
@@ -375,7 +373,9 @@ class Parser:
                 if (tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
                     raise InvalidExpression(f"\n [STATEMENT] Expected close parentheses type | Got {tokens.next}")
                 tokens.select_next()
-                return node_println
+
+                node = node_println
+                #return
             else:
                 raise InvalidExpression(f"\n [STATEMENT] Expected open parentheses type | Got {tokens.next}")
 
@@ -395,7 +395,8 @@ class Parser:
                 block_else = Parser().block()
                 node_if.add_child(block_else)
 
-            return node_if
+            node = node_if
+            #return
         elif (tokens.next.type == functions._Type.FOR):
             tokens.select_next()
             init_state = Parser().parser_assigment()
@@ -414,7 +415,9 @@ class Parser:
                     node_for.add_child(condition)
                     node_for.add_child(incremet)
                     node_for.add_child(block)
-                    return node_for
+
+                    node = node_for
+                    #return
                 else:
                     raise InvalidToken(f"\n [STATEMENT] Expected semicolon type | Got : {tokens.next.type}")
             else:
@@ -443,7 +446,8 @@ class Parser:
                         bool_expression = Parser().parse_bool_expression()
                         var_dec_node.add_child(bool_expression)
 
-                    return var_dec_node
+                    node = var_dec_node
+                    #return var_dec_node
                 else:
                     raise InvalidExpression(f"\n [STATEMENT] Expected 'type' type | Got {tokens.next}")
             else:
@@ -456,11 +460,13 @@ class Parser:
             node_return = Return(value='RETURN')
             node_return.add_child(bool_expression)
 
-            print(tokens.next.value)
-            return node_return
+            node = node_return
 
+            #return node_return
         else:
             raise InvalidToken(f"\n [STATEMENT] Token type recived : {tokens.next.type}")
+
+        return node
 
     @staticmethod
     def block() -> Node:
@@ -508,14 +514,14 @@ class Parser:
 
                             if(tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
                                 _type = tokens.next.type
+
+                                arg = VarDec(value=_type)
+                                arg.add_child(node_identifier)
+                                args_list.append(arg)
+
                                 tokens.select_next()
 
                                 if (tokens.next.type == delimiters._Type.COMMAN):
-
-                                    arg = VarDec(value=_type)
-                                    arg.add_child(node_identifier)
-                                    args_list.append(arg)
-
                                     tokens.select_next()
                                 else:
                                     break
@@ -535,6 +541,8 @@ class Parser:
                         node_block = Parser().block()
 
                         if (tokens.next.type == delimiters._Type.END_OF_LINE):
+                            tokens.select_next() # Consome \n
+
                             # Add definição da função como filho:
                             node_funcdec.add_child(node_definition)
 
@@ -554,16 +562,15 @@ class Parser:
         tokens = Parser().tokenizer
 
         while (tokens.next.type != "EOF"):
-            #state = Parser().parser_statement()
             declaration = Parser().parser_declaration()
 
             # Consumo um \n no final
             if (tokens.next.type == delimiters._Type.END_OF_LINE):
-                tokens.select_next()
-            else:
-                raise InvalidExpression(f"\n [PROGRAM] Expected END OF LINE type | Got {tokens.next}")
+                ...
+                #tokens.select_next()
+            #else:
+                #raise InvalidExpression(f"\n [PROGRAM] Expected END OF LINE type | Got {tokens.next}")
 
-            #node_program.add_child(state)
             node_program.add_child(declaration)
 
         tokens.select_next()

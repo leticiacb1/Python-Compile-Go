@@ -8,7 +8,6 @@ func read() int {
 
 func concat(a string, b string) string {
     return a . b
-    Println(a)
 }
 
 func main() int {
