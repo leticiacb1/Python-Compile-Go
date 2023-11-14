@@ -14,7 +14,7 @@ class Return(Node):
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table) -> (None, None):
+    def evaluate(self, symbol_table):
         bool_expression = self.children[0]
-        bool_expression.evaluate(symbol_table)
-        return None, None
+        value, _type = bool_expression.evaluate(symbol_table)
+        return value, _type

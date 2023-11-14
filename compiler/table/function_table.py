@@ -19,7 +19,6 @@ class FunctionTable:
 
     @classmethod
     def declare(cls, name: str, node: Node, _type: str) -> None:
-        print(f" ===== DECLARA FUNCAO DE NOME : {name}")
         if name not in cls.table.keys():
             cls.table[name] = (node, _type)
         else:

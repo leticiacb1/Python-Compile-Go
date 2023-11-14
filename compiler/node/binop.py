@@ -27,6 +27,7 @@ class BinOp(Node):
             value1 , type1 = self.children[0].evaluate(symbol_table)
             value2 , type2 = self.children[1].evaluate(symbol_table)
 
+
             if ((type1 == types.TYPE_INT) and (type2 == types.TYPE_INT)):
                 return value1 - value2, types.TYPE_INT
 

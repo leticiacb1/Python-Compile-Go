@@ -89,7 +89,7 @@ class Scanln(Node):
         number = input()
 
         # Número
-        if(number.isdigit()):
+        if(number.isnumeric()):
             return int(number), types.TYPE_INT
 
         raise InvalidType(f" [SCANLN - EVALUATE] Only the integer type is accepted in the Scanln function. Tried type: {type(number)}")

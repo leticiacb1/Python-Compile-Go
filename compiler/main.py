@@ -22,5 +22,4 @@ if __name__ == '__main__':
 
     # Resolve a arvore
     tree = Parser().run(code)
-    print(" ===== Fiz a arvore certinho ======")
     result = tree.evaluate(table)

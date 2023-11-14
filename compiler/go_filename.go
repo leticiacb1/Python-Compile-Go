@@ -19,8 +19,7 @@ func main() int {
 
     if (x_1 > 1 && !!!(x_1 < 1)) || x_1 == 3 {
         x_1 = 2
-    } 
-
+    }
 
     var x int = 3+6/3   *  2 -+-  +  2*4/2 + 0/1 -((6+ ((4)))/(2)) // Teste // Teste 2
     var y_1 int = 3
@@ -40,9 +39,7 @@ func main() int {
 
     for x_1 = 0; x_1 < 1 || x == 2; x_1 = soma(x_1, 1) {
         Println(x_1)
-    } 
-
-
+    }
 
     // Saida final
     Println(x_1)
@@ -61,12 +58,12 @@ func main() int {
     Println(y < z)
     Println(y > z)
 
-    // All str operations 
-    var a string 
+    // All str operations
+    var a string
     var b string
 
-    x_1 = 1 
-    y = 1 
+    x_1 = 1
+    y = 1
     z = 2
     a = "abc"
     b = "def"
@@ -79,7 +76,3 @@ func main() int {
     Println(a < b)
     Println(a > b)
 }
-// Era para dar errado:
-// func main() int {
-//	return "b"
-// }

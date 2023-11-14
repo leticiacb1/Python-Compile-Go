@@ -16,7 +16,6 @@ class FuncCall(Node):
     def __init__(self, value):
         super().__init__(value)
         self.function_table = FunctionTable
-        self.local_table    = SymbolTable()
 
     def evaluate(self, symbol_table) -> (None, None):
         #                  function_node (FuncDec)
@@ -27,7 +26,7 @@ class FuncCall(Node):
         #           identifier       |
         #                        identifier
 
-
+        local_table = SymbolTable()
         # ---- Argumentos passados para a função no seu "call" ----
         function_name = self.value
         reviced_args  = self.children
@@ -43,16 +42,16 @@ class FuncCall(Node):
         # ---- Varrendo argumentos passados e argumentos esperados ----
         for i in range(len(reviced_args)):
 
-            expected_args[i].evaluate(self.local_table)
+            expected_args[i].evaluate(local_table)
             identifier   = expected_args[i].children[0]
 
-            recived_value, recived_type = reviced_args[i].evaluate(self.local_table)
+            recived_value, recived_type = reviced_args[i].evaluate(symbol_table)
 
             # Settar valor recebido do argumento
-            self.local_table.setter(identifier.value, recived_value)
+            local_table.setter(identifier.value, recived_value)
 
-        # Executando o conteúdo da função:
-        block.evaluate(self.local_table)
+        # Executando o conteúdo da função
+        return block.evaluate(local_table)
 
 
 

@@ -17,7 +17,7 @@ identifier      Caso possua BoolExpression
     def __init__(self, value):
         super().__init__(value)
 
-    def evaluate(self, symbol_table) -> (int, str):
+    def evaluate(self, symbol_table) -> None:
 
         type1 = self.value
         symbol_table.create(self.children[0].value, type1)

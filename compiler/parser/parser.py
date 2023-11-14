@@ -464,7 +464,7 @@ class Parser:
 
             #return node_return
         else:
-            raise InvalidToken(f"\n [STATEMENT] Token type recived : {tokens.next.type}")
+            raise InvalidToken(f"\n [STATEMENT] Token type received : {tokens.next.type}")
 
         return node
 
@@ -500,7 +500,6 @@ class Parser:
 
             if(tokens.next.type == identifier._Type.IDENTIFIER):
                 function_name = Identifier(value=tokens.next.value)
-                print(f" NOME DA FUNÇÃO : {function_name.value}")
                 tokens.select_next()
 
                 if (tokens.next.type == delimiters._Type.OPEN_PARENTHESES):
