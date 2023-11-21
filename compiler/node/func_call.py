@@ -43,15 +43,28 @@ class FuncCall(Node):
         for i in range(len(reviced_args)):
 
             expected_args[i].evaluate(local_table)
+            expected_type = expected_args[i].value
+
             identifier   = expected_args[i].children[0]
 
             recived_value, recived_type = reviced_args[i].evaluate(symbol_table)
+
+            if(recived_type != expected_type):
+                raise Exception(f" [FUNCALL- EVALUATE] Incorrect arg type for {identifier.value} in {function_name} function. Expected type {expected_type} got {recived_type}")
 
             # Settar valor recebido do argumento
             local_table.setter(identifier.value, recived_value)
 
         # Executando o conteúdo da função
-        return block.evaluate(local_table)
+        result = block.evaluate(local_table)
+
+        if(result and result != (None, None) and len(result) == 2):
+            value , return_type = result
+
+            if(return_type != _type):
+                raise Exception(f" [FUNCALL- EVALUATE] Incorrect return type in {function_name} function. Expected type {_type} got {return_type}")
+
+        return result
 
 
 

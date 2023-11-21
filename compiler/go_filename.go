@@ -21,6 +21,7 @@ func main() int {
         x_1 = 2
     }
 
+
     var x int = 3+6/3   *  2 -+-  +  2*4/2 + 0/1 -((6+ ((4)))/(2)) // Teste // Teste 2
     var y_1 int = 3
     y_1 = soma(y_1, x_1)
@@ -40,6 +41,8 @@ func main() int {
     for x_1 = 0; x_1 < 1 || x == 2; x_1 = soma(x_1, 1) {
         Println(x_1)
     }
+
+
 
     // Saida final
     Println(x_1)

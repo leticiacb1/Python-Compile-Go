@@ -1,5 +1,5 @@
 from compiler.tokenizer import Tokenizer
-from compiler.constants import delimiters, number, operators, functions, identifier , text , types
+from compiler.constants import delimiters, number, operators, functions, identifier , text , types, eof
 from compiler.errors.parser import InvalidExpression
 from compiler.errors.tokens import InvalidToken
 from compiler.node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program , Return, FuncCall)
@@ -358,7 +358,7 @@ class Parser:
 
         elif (tokens.next.type == identifier._Type.IDENTIFIER):
             node = Parser().parser_assigment()
-            #return
+
         elif (tokens.next.type == functions._Type.PRINTLN):
             tokens.select_next()
 
@@ -375,7 +375,7 @@ class Parser:
                 tokens.select_next()
 
                 node = node_println
-                #return
+
             else:
                 raise InvalidExpression(f"\n [STATEMENT] Expected open parentheses type | Got {tokens.next}")
 
@@ -396,7 +396,7 @@ class Parser:
                 node_if.add_child(block_else)
 
             node = node_if
-            #return
+
         elif (tokens.next.type == functions._Type.FOR):
             tokens.select_next()
             init_state = Parser().parser_assigment()
@@ -417,7 +417,7 @@ class Parser:
                     node_for.add_child(block)
 
                     node = node_for
-                    #return
+
                 else:
                     raise InvalidToken(f"\n [STATEMENT] Expected semicolon type | Got : {tokens.next.type}")
             else:
@@ -447,7 +447,7 @@ class Parser:
                         var_dec_node.add_child(bool_expression)
 
                     node = var_dec_node
-                    #return var_dec_node
+
                 else:
                     raise InvalidExpression(f"\n [STATEMENT] Expected 'type' type | Got {tokens.next}")
             else:
@@ -462,9 +462,15 @@ class Parser:
 
             node = node_return
 
-            #return node_return
         else:
             raise InvalidToken(f"\n [STATEMENT] Token type received : {tokens.next.type}")
+
+        # Obriga consumo de \n após essas estruturas
+        if(tokens.next.type != eof._Type.EOF):
+            if (tokens.next.type == delimiters._Type.END_OF_LINE):
+                tokens.select_next()
+            else:
+                raise InvalidToken(f"\n [STATEMENT] Expected END OF LINE after a statement , got: {tokens.next.type}")
 
         return node
 
@@ -483,7 +489,12 @@ class Parser:
                 while(tokens.next.type != delimiters._Type.CLOSE_KEY):
                     state = Parser().parser_statement()
                     node_block.add_child(state)
-                tokens.select_next() # Consome o parênteses
+
+                if(tokens.next.type == delimiters._Type.CLOSE_KEY):
+                    tokens.select_next()
+                else:
+                    raise InvalidExpression(f"\n [BLOCK] Expected CLOSE KEY type | Got {tokens.next}")
+
                 return node_block
             else:
                 raise InvalidExpression(f"\n [BLOCK] Expected END OF LINE type | Got {tokens.next}")
@@ -526,7 +537,6 @@ class Parser:
                                 else:
                                     break
 
-                    # Consome CLOSE_PARENTHESES:
                     if(tokens.next.type == delimiters._Type.CLOSE_PARENTHESES):
                         tokens.select_next()
                     else:
@@ -554,6 +564,10 @@ class Parser:
                             node_funcdec.add_child(node_block)
 
                             return node_funcdec
+                    else:
+                        raise InvalidExpression(f"\n [DECLARE] Expected END OF LINE type | Got {tokens.next}")
+        else:
+            raise InvalidExpression(f"\n [DECLARE] Expected FUNCDEC type | Got {tokens.next}")
 
     @staticmethod
     def program() -> Node:
@@ -566,10 +580,7 @@ class Parser:
 
             # Consumo um \n no final
             if (tokens.next.type == delimiters._Type.END_OF_LINE):
-                ...
-                #tokens.select_next()
-            #else:
-                #raise InvalidExpression(f"\n [PROGRAM] Expected END OF LINE type | Got {tokens.next}")
+                tokens.select_next()
 
             node_program.add_child(declaration)
 

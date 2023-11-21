@@ -9,7 +9,7 @@ class PrePro:
     def filter(code: str) -> str:
         code = re.sub(r"\s*//.*", "", code)
 
-        if (len(code) == 1):
+        if (len(code) == 1 and code == '\n'):
             # Linha apenas com apenas \n pós substituição
             return ''
 
