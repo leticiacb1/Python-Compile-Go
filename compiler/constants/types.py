@@ -1,0 +1,2 @@
+TYPE_INT = "INT"
+TYPE_STR = "STRING"
