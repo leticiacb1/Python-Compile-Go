@@ -1,5 +1,5 @@
 from .node import Node
-from compiler.errors.types import IncompatibleTypes
+from errors.types import IncompatibleTypes
 
 class Assigment(Node):
     '''

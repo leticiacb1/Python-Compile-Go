@@ -1,7 +1,7 @@
 from .node import Node
-from compiler.constants import operators
-from compiler.constants import types
-from compiler.errors.operators import InvalidOperators
+from constants import operators
+from constants import types
+from errors.operators import InvalidOperators
 
 class UnOp(Node):
     '''

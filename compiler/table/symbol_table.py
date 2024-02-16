@@ -1,4 +1,4 @@
-from compiler.errors.symbol_table import ExistingKey
+from errors.symbol_table import ExistingKey
 
 class SymbolTable:
     '''

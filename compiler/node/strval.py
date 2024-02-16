@@ -1,5 +1,5 @@
 from .node import Node
-from compiler.constants import types
+from constants import types
 
 class StrVal(Node):
     '''

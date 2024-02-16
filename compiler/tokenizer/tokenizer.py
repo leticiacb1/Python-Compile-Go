@@ -1,6 +1,7 @@
 import re
-from compiler.constants import delimiters, eof, invalid, number , operators , functions , identifier , types, text
-from compiler.tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier , TokenRelational, TokenText
+
+from constants import delimiters, eof, invalid, number , operators , functions , identifier , types, text
+from tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier , TokenRelational, TokenText
 
 class Tokenizer:
     '''

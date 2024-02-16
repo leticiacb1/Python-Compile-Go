@@ -1,5 +1,5 @@
 from .node import Node
-from compiler.constants.delimiters import _Type
+from constants.delimiters import _Type
 
 class Block(Node):
     '''

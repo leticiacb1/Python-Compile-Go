@@ -1,5 +1,5 @@
 from .node import Node
-from compiler.table import FunctionTable, SymbolTable
+from table import FunctionTable, SymbolTable
 
 class FuncCall(Node):
     '''

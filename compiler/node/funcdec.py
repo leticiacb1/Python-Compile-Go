@@ -1,5 +1,5 @@
 from .node import Node
-from compiler.table import FunctionTable
+from table import FunctionTable
 
 class FuncDec(Node):
     '''

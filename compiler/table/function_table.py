@@ -1,5 +1,5 @@
-from compiler.errors.symbol_table import ExistingKey
-from compiler.node import Node
+from errors.symbol_table import ExistingKey
+from node import Node
 
 
 class FunctionTable:

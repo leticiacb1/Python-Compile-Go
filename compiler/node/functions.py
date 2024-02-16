@@ -1,6 +1,6 @@
 from .node import Node
-from compiler.constants import types
-from compiler.errors.types import InvalidType
+from constants import types
+from errors.types import InvalidType
 
 class Println(Node):
     '''

@@ -1,7 +1,7 @@
 from .node import Node
-from compiler.constants import operators
-from compiler.constants import types
-from compiler.errors.types import IncompatibleTypes, InvalidType
+from constants import operators
+from constants import types
+from errors.types import IncompatibleTypes, InvalidType
 
 class BinOp(Node):
     '''

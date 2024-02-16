@@ -1,8 +1,11 @@
-from compiler.tokenizer import Tokenizer
-from compiler.constants import delimiters, number, operators, functions, identifier , text , types, eof
-from compiler.errors.parser import InvalidExpression
-from compiler.errors.tokens import InvalidToken
-from compiler.node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program , Return, FuncCall)
+#from compiler.tokenizer import Tokenizer
+
+from tokenizer import Tokenizer
+
+from constants import delimiters, number, operators, functions, identifier , text , types, eof
+from errors.parser import InvalidExpression
+from errors.tokens import InvalidToken
+from node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program , Return, FuncCall)
 
 
 class Parser:
