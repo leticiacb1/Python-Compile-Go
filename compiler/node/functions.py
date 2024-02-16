@@ -69,12 +69,12 @@ class For(Node):
         increment  = self.children[2]
         block      = self.children[3]
 
-        value, type = condition.evaluate(symbol_table)
+        value, _type = condition.evaluate(symbol_table)
         while value:
             block.evaluate(symbol_table)
             increment.evaluate(symbol_table)
 
-            value, type = condition.evaluate(symbol_table)
+            value, _type = condition.evaluate(symbol_table)
 
 class Scanln(Node):
     '''
@@ -90,6 +90,6 @@ class Scanln(Node):
 
         # Número
         if(number.isnumeric()):
-            return int(number), types.TYPE_INT
+            return int(number), types._Type.INT
 
         raise InvalidType(f" [SCANLN - EVALUATE] Only the integer type is accepted in the Scanln function. Tried type: {type(number)}")

@@ -1,2 +1,6 @@
-TYPE_INT = "INT"
-TYPE_STR = "STRING"
+class _Type:
+    INT = "INT"
+    STR = "STRING"
+
+class _Value:
+    0

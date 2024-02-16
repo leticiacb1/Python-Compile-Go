@@ -1,6 +1,6 @@
 import re
 
-from constants import delimiters, eof, invalid, number , operators , functions , identifier , types, text
+from constants import delimiters, operators , functions , specials , types
 from tokens import Tokens, TokenEOF, TokenInvalid , TokenNumber, TokenOperator , TokenDelimiter , TokenFunction, TokenIdentifier , TokenRelational, TokenText
 
 class Tokenizer:
@@ -14,16 +14,16 @@ class Tokenizer:
         self.next = Tokens("", 0)
 
         self.reserved_words = {
-            'Println': {'type':functions._Type.PRINTLN , 'value': functions._Value.PRINTLN},
-            'Scanln': {'type': functions._Type.SCANLN, 'value': functions._Value.SCANLN},
-            'for':  {'type': functions._Type.FOR, 'value': functions._Value.FOR},
-            'if': {'type': functions._Type.IF, 'value': functions._Value.IF},
-            'else': {'type': functions._Type.ELSE, 'value': functions._Value.ELSE},
-            'var': {'type': functions._Type.VAR , 'value': functions._Value.VAR },
-            'int': {'type': types.TYPE_INT, 'value': 0},
-            'string': {'type': types.TYPE_STR, 'value': 0},
-            'return': {'type': functions._Type.RETURN, 'value': functions._Value.RETURN},
-            'func': {'type': functions._Type.FUNC, 'value': functions._Value.FUNC}
+            'Println': {'type':functions._Type.PRINTLN , 'value': functions._Value},
+            'Scanln': {'type': functions._Type.SCANLN, 'value': functions._Value},
+            'for':  {'type': functions._Type.FOR, 'value': functions._Value},
+            'if': {'type': functions._Type.IF, 'value': functions._Value},
+            'else': {'type': functions._Type.ELSE, 'value': functions._Value},
+            'var': {'type': functions._Type.VAR , 'value': functions._Value },
+            'int': {'type': types._Type.INT, 'value': types._Value},
+            'string': {'type': types._Type.STR, 'value': types._Value},
+            'return': {'type': functions._Type.RETURN, 'value': functions._Value},
+            'func': {'type': functions._Type.FUNC, 'value': functions._Value}
         }
 
     def select_next(self) -> None:
@@ -35,8 +35,8 @@ class Tokenizer:
 
             if(self.position >= len(self.source)):
             
-                if(self.next.type != eof._Type.EOF):
-                    self.next = TokenEOF(type = eof._Type.EOF , value = eof._Value)
+                if(self.next.type != specials._Type.EOF):
+                    self.next = TokenEOF(type = specials._Type.EOF , value = specials._Value)
                 break
 
             else:
@@ -47,93 +47,93 @@ class Tokenizer:
                         value_str += self.source[self.position]
                         self.position += 1    
                 
-                    self.next = TokenNumber(type = number._Type.INT , value = int(value_str))
+                    self.next = TokenNumber(type = specials._Type.VARIABLE_INT , value = int(value_str))
                     break
 
                 elif(self.source[self.position] == operators._Type.PLUS):
-                    self.next = TokenOperator(type = operators._Type.PLUS , value = operators._Value.PLUS)
+                    self.next = TokenOperator(type = operators._Type.PLUS , value = operators._Value)
                     self.position +=1
                     break
 
                 elif(self.source[self.position] == operators._Type.MINUS):
-                    self.next = TokenOperator(type = operators._Type.MINUS , value = operators._Value.MINUS)
+                    self.next = TokenOperator(type = operators._Type.MINUS , value = operators._Value)
                     self.position +=1
                     break
                 
                 elif(self.source[self.position] == operators._Type.TIMES):
-                    self.next = TokenOperator(type = operators._Type.TIMES , value = operators._Value.TIMES)
+                    self.next = TokenOperator(type = operators._Type.TIMES , value = operators._Value)
                     self.position +=1
                     break
 
                 elif(self.source[self.position] == operators._Type.BAR):
-                    self.next = TokenOperator(type = operators._Type.BAR , value = operators._Value.BAR)
+                    self.next = TokenOperator(type = operators._Type.BAR , value = operators._Value)
                     self.position +=1
                     break
                 elif(self.source[self.position] == operators._Type.EQUAL):
 
                     if(self.source[self.position+1] == operators._Type.EQUAL):
-                        self.next = TokenRelational(type=operators._Type.EQUAL_COMP, value=operators._Value.EQUAL_COMP)
+                        self.next = TokenRelational(type=operators._Type.EQUAL_COMP, value=operators._Value)
                         self.position += 1
                     else:
-                        self.next = TokenOperator(type = operators._Type.EQUAL , value = operators._Value.EQUAL)
+                        self.next = TokenOperator(type = operators._Type.EQUAL , value = operators._Value)
 
                     self.position +=1
                     break
                 elif (self.source[self.position] == operators._Type.BIGGER_THEN):
-                    self.next = TokenOperator(type=operators._Type.BIGGER_THEN, value=operators._Value.BIGGER_THEN)
+                    self.next = TokenOperator(type=operators._Type.BIGGER_THEN, value=operators._Value)
                     self.position += 1
                     break
                 elif (self.source[self.position] == operators._Type.LESS_THAN):
-                    self.next = TokenOperator(type=operators._Type.LESS_THAN, value=operators._Value.LESS_THAN)
+                    self.next = TokenOperator(type=operators._Type.LESS_THAN, value=operators._Value)
                     self.position += 1
                     break
                 elif (self.source[self.position] == operators._Type.NOT):
-                    self.next = TokenOperator(type=operators._Type.NOT, value=operators._Value.NOT)
+                    self.next = TokenOperator(type=operators._Type.NOT, value=operators._Value)
                     self.position += 1
                     break
                 elif ( (self.source[self.position] == operators._Type.E) and (self.source[self.position+1] == operators._Type.E)):
                     self.position += 2
-                    self.next = TokenRelational(type=operators._Type.AND, value=operators._Value.AND)
+                    self.next = TokenRelational(type=operators._Type.AND, value=operators._Value)
                     break
 
                 elif ((self.source[self.position] == operators._Type.O) and (self.source[self.position+1] == operators._Type.O)):
                     self.position += 2
-                    self.next = TokenOperator(type=operators._Type.OR, value=operators._Value.OR)
+                    self.next = TokenOperator(type=operators._Type.OR, value=operators._Value)
                     break
 
                 elif(self.source[self.position] == operators._Type.CONCAT):
-                    self.next = TokenOperator(type=operators._Type.CONCAT, value=operators._Value.CONCAT)
+                    self.next = TokenOperator(type=operators._Type.CONCAT, value=operators._Value)
                     self.position += 1
                     break
 
                 elif(self.source[self.position] == delimiters._Type.OPEN_PARENTHESES):
-                    self.next = TokenDelimiter(type = delimiters._Type.OPEN_PARENTHESES , value = delimiters._Value.PARENTHESES)
+                    self.next = TokenDelimiter(type = delimiters._Type.OPEN_PARENTHESES , value = delimiters._Value)
                     self.position +=1
                     break
                 elif(self.source[self.position] == delimiters._Type.CLOSE_PARENTHESES):
-                    self.next = TokenDelimiter(type = delimiters._Type.CLOSE_PARENTHESES , value = delimiters._Value.PARENTHESES)
+                    self.next = TokenDelimiter(type = delimiters._Type.CLOSE_PARENTHESES , value = delimiters._Value)
                     self.position +=1
                     break
                 elif (self.source[self.position] == delimiters._Type.OPEN_KEY):
                     self.next = TokenDelimiter(type=delimiters._Type.OPEN_KEY,
-                                               value=delimiters._Value.OPEN_KEY)
+                                               value=delimiters._Value)
                     self.position += 1
                     break
                 elif (self.source[self.position] == delimiters._Type.CLOSE_KEY):
                     self.next = TokenDelimiter(type=delimiters._Type.CLOSE_KEY,
-                                               value=delimiters._Value.CLOSE_KEY)
+                                               value=delimiters._Value)
                     self.position += 1
                     break
                 elif(self.source[self.position] == delimiters._Type.END_OF_LINE):
-                    self.next = TokenDelimiter(type = delimiters._Type.END_OF_LINE , value = delimiters._Value.END_OF_LINE)
+                    self.next = TokenDelimiter(type = delimiters._Type.END_OF_LINE , value = delimiters._Value)
                     self.position +=1
                     break
                 elif (self.source[self.position] == delimiters._Type.SEMICOLON):
-                    self.next = TokenDelimiter(type=delimiters._Type.SEMICOLON, value=delimiters._Value.SEMICOLON)
+                    self.next = TokenDelimiter(type=delimiters._Type.SEMICOLON, value=delimiters._Value)
                     self.position += 1
                     break
                 elif (self.source[self.position] == delimiters._Type.COMMAN):
-                    self.next = TokenDelimiter(type=delimiters._Type.COMMAN, value=delimiters._Value.COMMAN)
+                    self.next = TokenDelimiter(type=delimiters._Type.COMMAN, value=delimiters._Value)
                     self.position += 1
                     break
                 elif(self.source[self.position] == delimiters._Type.QUOTATION_MARKS):
@@ -145,7 +145,7 @@ class Tokenizer:
                         self.position += 1
 
                     self.position += 1
-                    self.next = TokenText(type= text._Type.VARIABLE_STR , value= value_str)
+                    self.next = TokenText(type= specials._Type.VARIABLE_STR , value= value_str)
 
                     break
                 elif(self.source[self.position].isalpha()):
@@ -161,7 +161,7 @@ class Tokenizer:
                         self.next = TokenFunction(type = self.reserved_words[value_str]['type'] , value = self.reserved_words[value_str]['value'])
                     else:
                         # Identififer / Variable
-                        self.next = TokenIdentifier(type = identifier._Type.IDENTIFIER, value = value_str)
+                        self.next = TokenIdentifier(type = specials._Type.IDENTIFIER, value = value_str)
 
                     break
                 elif(self.source[self.position].isspace()):

@@ -2,7 +2,7 @@
 
 from tokenizer import Tokenizer
 
-from constants import delimiters, number, operators, functions, identifier , text , types, eof
+from constants import delimiters,  operators, functions, specials , types
 from errors.parser import InvalidExpression
 from errors.tokens import InvalidToken
 from node import (IntVal, StrVal, VarDec, FuncDec, BinOp, UnOp, NoOp, Identifier, Assigment, Node, Println , Scanln, If , For, Block , Program , Return, FuncCall)
@@ -66,20 +66,20 @@ class Parser:
         '''
         tokens = Parser().tokenizer
 
-        if (tokens.next.type == number._Type.INT):
+        if (tokens.next.type == specials._Type.VARIABLE_INT):
 
             node = IntVal(value=tokens.next.value)
             tokens.select_next()
 
             return node
 
-        elif (tokens.next.type == text._Type.VARIABLE_STR):
+        elif (tokens.next.type == specials._Type.VARIABLE_STR):
             node = StrVal(value=tokens.next.value)
             tokens.select_next()
 
             return node
 
-        elif (tokens.next.type == identifier._Type.IDENTIFIER):
+        elif (tokens.next.type == specials._Type.IDENTIFIER):
             node = Identifier(value=tokens.next.value)
             tokens.select_next()
 
@@ -359,7 +359,7 @@ class Parser:
             tokens.select_next()
             node = NoOp(value='END_OF_LINE')
 
-        elif (tokens.next.type == identifier._Type.IDENTIFIER):
+        elif (tokens.next.type == specials._Type.IDENTIFIER):
             node = Parser().parser_assigment()
 
         elif (tokens.next.type == functions._Type.PRINTLN):
@@ -429,13 +429,13 @@ class Parser:
             # Var | identifier | type | = BExpression
             tokens.select_next()
 
-            if (tokens.next.type == identifier._Type.IDENTIFIER):
+            if (tokens.next.type == specials._Type.IDENTIFIER):
 
                 node_identifier = Identifier(value=tokens.next.value)
                 tokens.select_next()
 
                 # --------- Type ---------
-                if (tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
+                if (tokens.next.type == types._Type.INT or tokens.next.type == types._Type.STR):
                     _type = tokens.next.type
 
                     # Add children
@@ -469,7 +469,7 @@ class Parser:
             raise InvalidToken(f"\n [STATEMENT] Token type received : {tokens.next.type}")
 
         # Obriga consumo de \n após essas estruturas
-        if(tokens.next.type != eof._Type.EOF):
+        if(tokens.next.type != specials._Type.EOF):
             if (tokens.next.type == delimiters._Type.END_OF_LINE):
                 tokens.select_next()
             else:
@@ -512,7 +512,7 @@ class Parser:
         if (tokens.next.type == functions._Type.FUNC):
             tokens.select_next()
 
-            if(tokens.next.type == identifier._Type.IDENTIFIER):
+            if(tokens.next.type == specials._Type.IDENTIFIER):
                 function_name = Identifier(value=tokens.next.value)
                 tokens.select_next()
 
@@ -522,11 +522,11 @@ class Parser:
                     while (tokens.next.type != delimiters._Type.CLOSE_PARENTHESES):
 
                         # ---- Add argumentos -----
-                        if(tokens.next.type == identifier._Type.IDENTIFIER):
+                        if(tokens.next.type == specials._Type.IDENTIFIER):
                             node_identifier = Identifier(value=tokens.next.value)
                             tokens.select_next()
 
-                            if(tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
+                            if(tokens.next.type == types._Type.INT or tokens.next.type == types._Type.STR):
                                 _type = tokens.next.type
 
                                 arg = VarDec(value=_type)
@@ -545,7 +545,7 @@ class Parser:
                     else:
                         raise InvalidExpression(f"\n [DECLARATION] Expected close parentheses type | Got {tokens.next}")
 
-                    if (tokens.next.type == types.TYPE_INT or tokens.next.type == types.TYPE_STR):
+                    if (tokens.next.type == types._Type.INT or tokens.next.type == types._Type.STR):
 
                         node_definition = VarDec(value=tokens.next.type)
                         node_definition.add_child(function_name)

@@ -9,10 +9,4 @@ class _Type:
     COMMAN = ','
 
 class _Value:
-    PARENTHESES = 5
-    END_OF_LINE = 6
-    OPEN_KEY    = 7
-    CLOSE_KEY   = 8
-    SEMICOLON   = 9
-    QUOTATION_MARKS = 10
-    COMMAN          = 11
+    0
