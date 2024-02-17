@@ -1,5 +1,3 @@
-#from compiler.tokenizer import Tokenizer
-
 from tokenizer import Tokenizer
 
 from constants import delimiters,  operators, functions, specials , types
